@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Wortkarten — Deutsch A1–C1</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+:root {
+  --bg: #0f0e0c;
+  --surface: #1a1916;
+  --surface2: #242220;
+  --border: #2e2c28;
+  --accent: #e8c547;
+  --accent2: #d4a843;
+  --text: #f0ece0;
+  --text-muted: #8a8070;
+  --text-dim: #5a5448;
+  /* Gender colors */
+  --masc: #3a7ab8;
+  --masc-glow: rgba(58,122,184,0.18);
+  --fem: #c04060;
+  --fem-glow: rgba(192,64,96,0.18);
+  --neut: #3a9b6f;
+  --neut-glow: rgba(58,155,111,0.18);
+  --none-col: #5a5448;
+  /* plural = no color (same as none) */
+  --swipe-left: #c04040;
+  --swipe-right: #40a060;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  user-select:none;
+}
+
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse 80% 50% at 20% 10%,rgba(232,197,71,0.04) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 40% at 80% 90%,rgba(74,155,111,0.03) 0%,transparent 50%);
+  pointer-events:none;z-index:0;
+}
+
+/* ─── HEADER ─── */
+header{
+  position:sticky;top:0;z-index:200;
+  background:rgba(15,14,12,0.95);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 20px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{font-family:'Playfair Display',serif;font-size:19px;font-weight:900;}
+.logo span{color:var(--accent);}
+.header-right{display:flex;gap:8px;align-items:center;}
+
+.level-pills{display:flex;gap:4px;}
+.level-pill{
+  padding:4px 9px;border-radius:20px;font-size:11px;font-weight:700;
+  letter-spacing:.5px;border:1.5px solid var(--border);
+  background:transparent;color:var(--text-muted);cursor:pointer;transition:all .2s;
+}
+.level-pill.active{background:var(--accent);border-color:var(--accent);color:#0f0e0c;}
+
+/* ─── SCREENS ─── */
+.screen{position:relative;z-index:1;padding:20px 20px 60px;max-width:920px;margin:0 auto;}
+
+/* ─── HOME ─── */
+#home-screen{}
+
+.home-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(26px,5vw,50px);
+  font-weight:900;line-height:1.05;margin-bottom:6px;
+}
+.home-title em{font-style:italic;color:var(--accent);}
+.home-sub{color:var(--text-muted);font-size:14px;margin-bottom:20px;}
+
+/* SRS BANNER */
+.srs-banner{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:12px;padding:14px 16px;
+  margin-bottom:20px;
+  display:flex;align-items:center;gap:14px;
+}
+.srs-banner-icon{font-size:28px;}
+.srs-banner-text h4{font-size:13px;font-weight:600;margin-bottom:2px;}
+.srs-banner-text p{font-size:12px;color:var(--text-muted);line-height:1.4;}
+.srs-start-btn{
+  margin-left:auto;flex-shrink:0;
+  padding:8px 16px;background:var(--accent);border:none;border-radius:8px;
+  color:#0f0e0c;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s;
+}
+.srs-start-btn:hover{background:var(--accent2);}
+.srs-count{
+  font-size:22px;font-weight:900;color:var(--accent);
+  font-family:'Playfair Display',serif;
+}
+
+/* SECTION LABEL */
+.section-label{
+  font-size:11px;text-transform:uppercase;letter-spacing:2px;
+  color:var(--text-dim);margin-bottom:10px;
+}
+
+/* LEVEL TABS */
+.level-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.level-tab{
+  padding:7px 16px;border-radius:30px;
+  border:1.5px solid var(--border);
+  background:transparent;color:var(--text-muted);
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .2s;letter-spacing:.5px;
+}
+.level-tab:hover{border-color:var(--accent);color:var(--text);}
+.level-tab.active{background:var(--accent);border-color:var(--accent);color:#0f0e0c;}
+
+/* TOPICS GRID */
+.topics-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:8px;margin-bottom:20px;
+}
+.topic-card{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;
+}
+.topic-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.tc-emoji{font-size:26px;margin-bottom:6px;}
+.tc-name{font-size:13px;font-weight:600;}
+.tc-meta{font-size:11px;color:var(--text-muted);margin-top:3px;}
+
+/* DIVIDER */
+.divider{
+  display:flex;align-items:center;gap:10px;
+  color:var(--text-dim);font-size:11px;margin:16px 0;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* CUSTOM BOX */
+.custom-box{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:12px;padding:18px;
+}
+.custom-box label{
+  font-size:11px;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--text-muted);display:block;margin-bottom:8px;
+}
+#words-input{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:13px;padding:10px 12px;resize:vertical;min-height:80px;
+  outline:none;transition:border-color .2s;
+}
+#words-input:focus{border-color:var(--accent);}
+#words-input::placeholder{color:var(--text-dim);}
+
+.gen-btn{
+  width:100%;margin-top:10px;padding:13px;
+  background:var(--accent);border:none;border-radius:8px;
+  color:#0f0e0c;font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;
+}
+.gen-btn:hover{background:var(--accent2);transform:translateY(-1px);}
+.gen-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+
+.error-msg{
+  background:rgba(184,74,74,.1);border:1px solid rgba(184,74,74,.3);
+  border-radius:8px;padding:10px;font-size:12px;color:#e88080;
+  margin-top:8px;display:none;
+}
+
+/* ─── LOADING ─── */
+#loading-screen{display:none;text-align:center;padding:80px 20px;}
+.loader-ring{
+  width:48px;height:48px;border:3px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin .8s linear infinite;margin:0 auto 18px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+#loading-screen strong{font-family:'Playfair Display',serif;font-size:19px;color:var(--text);display:block;margin-bottom:6px;}
+#loading-screen p{color:var(--text-muted);font-size:13px;}
+
+/* ─── CARDS SCREEN ─── */
+#cards-screen{display:none;}
+
+.cards-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;gap:10px;
+}
+.back-link{
+  background:none;border:none;color:var(--text-muted);
+  font-family:'DM Sans',sans-serif;font-size:13px;
+  cursor:pointer;padding:0;transition:color .2s;
+}
+.back-link:hover{color:var(--text);}
+.deck-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;}
+.cards-meta{font-size:12px;color:var(--text-muted);}
+.cards-meta strong{color:var(--accent);}
+
+.progress-bar{height:3px;background:var(--border);border-radius:3px;margin-bottom:20px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s ease;}
+
+/* SWIPE HINTS */
+.swipe-hints{
+  display:flex;justify-content:space-between;
+  margin-bottom:10px;padding:0 4px;
+}
+.hint{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;font-weight:600;letter-spacing:.5px;
+  opacity:.5;transition:opacity .3s;
+}
+.hint-left{color:var(--swipe-left);}
+.hint-right{color:var(--swipe-right);}
+.hint.active{opacity:1;}
+
+/* CARD STAGE */
+.card-stage{
+  position:relative;
+  width:100%;max-width:520px;
+  margin:0 auto;
+  height:300px;
+}
+
+/* SWIPE INDICATOR OVERLAY */
+.swipe-overlay{
+  position:absolute;inset:0;border-radius:18px;
+  pointer-events:none;z-index:10;
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;font-weight:900;
+  opacity:0;transition:opacity .1s;
+}
+.swipe-overlay.show-left{
+  background:linear-gradient(135deg,rgba(192,64,64,.3),transparent);
+  color:var(--swipe-left);opacity:1;
+}
+.swipe-overlay.show-right{
+  background:linear-gradient(225deg,rgba(64,160,96,.3),transparent);
+  color:var(--swipe-right);opacity:1;
+}
+
+/* CARD CONTAINER */
+.card-container{
+  perspective:1200px;
+  width:100%;height:100%;
+  cursor:grab;
+  position:absolute;top:0;left:0;
+  transition:transform .08s linear,box-shadow .08s;
+}
+.card-container:active{cursor:grabbing;}
+.card-container.animating{
+  transition:transform .4s cubic-bezier(.25,.46,.45,.94),opacity .4s;
+}
+
+.card-inner{
+  width:100%;height:100%;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .5s cubic-bezier(.175,.885,.32,1.275);
+}
+.card-inner.flipped{transform:rotateY(180deg);}
+
+.card-face{
+  position:absolute;inset:0;
+  border-radius:18px;
+  backface-visibility:hidden;
+  overflow:hidden;
+}
+
+/* GENDER COLOR THEMING */
+/* Front */
+.card-front{
+  display:flex;flex-direction:column;
+  background:var(--surface);
+  border:2px solid var(--border);
+  transition:border-color .3s,box-shadow .3s;
+}
+.card-front.gender-masc{border-color:var(--masc);box-shadow:0 0 24px var(--masc-glow);}
+.card-front.gender-fem{border-color:var(--fem);box-shadow:0 0 24px var(--fem-glow);}
+.card-front.gender-neut{border-color:var(--neut);box-shadow:0 0 24px var(--neut-glow);}
+
+.card-img{
+  flex:1;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:80px;line-height:1;
+  position:relative;
+  transition:background .3s;
+}
+.gender-masc .card-img{background:rgba(58,122,184,.08);}
+.gender-fem  .card-img{background:rgba(192,64,96,.08);}
+.gender-neut .card-img{background:rgba(58,155,111,.08);}
+
+.gender-badge{
+  position:absolute;top:10px;right:10px;
+  padding:3px 9px;border-radius:20px;
+  font-size:10px;font-weight:700;letter-spacing:1px;
+  color:#fff;
+}
+.badge-der{background:var(--masc);}
+.badge-die{background:var(--fem);}
+.badge-das{background:var(--neut);}
+.badge-none{background:var(--none-col);}
+
+.level-badge{
+  position:absolute;top:10px;left:10px;
+  padding:3px 9px;border-radius:20px;
+  font-size:10px;font-weight:700;letter-spacing:1px;
+  background:rgba(0,0,0,.55);color:#fff;
+  backdrop-filter:blur(6px);
+}
+
+.card-word-strip{
+  padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--border);
+}
+.card-word{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;}
+.flip-hint{font-size:10px;color:var(--text-dim);}
+
+/* Back */
+.card-back{
+  background:var(--surface);
+  border:2px solid var(--border);
+  transform:rotateY(180deg);
+  display:flex;flex-direction:column;
+  padding:22px;justify-content:space-between;
+  transition:border-color .3s,box-shadow .3s;
+}
+.card-back.gender-masc{border-color:var(--masc);box-shadow:0 0 24px var(--masc-glow);}
+.card-back.gender-fem{border-color:var(--fem);box-shadow:0 0 24px var(--fem-glow);}
+.card-back.gender-neut{border-color:var(--neut);box-shadow:0 0 24px var(--neut-glow);}
+
+.back-article{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
+.art-der{color:var(--masc);}
+.art-die{color:var(--fem);}
+.art-das{color:var(--neut);}
+
+.back-word{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;margin-bottom:3px;}
+.back-word.col-masc{color:var(--masc);}
+.back-word.col-fem{color:var(--fem);}
+.back-word.col-neut{color:var(--neut);}
+.back-word.col-none{color:var(--accent);}
+
+.back-translation{font-size:18px;font-weight:300;margin-bottom:14px;}
+
+.back-example{
+  background:var(--surface2);
+  border-left:3px solid var(--border);
+  padding:10px 14px;border-radius:0 8px 8px 0;
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  font-size:13px;line-height:1.65;color:var(--text-muted);
+}
+.back-example.border-masc{border-left-color:var(--masc);}
+.back-example.border-fem{border-left-color:var(--fem);}
+.back-example.border-neut{border-left-color:var(--neut);}
+.back-example.border-none{border-left-color:var(--accent);}
+.back-example em{color:var(--text);font-style:normal;font-weight:600;}
+.ex-ru{font-size:11px;color:var(--text-dim);margin-top:5px;font-style:italic;}
+
+/* SWIPE BUTTONS */
+.swipe-buttons{
+  display:flex;gap:12px;justify-content:center;
+  margin-top:16px;
+}
+.swipe-btn{
+  flex:1;max-width:160px;
+  padding:12px;border-radius:40px;
+  border:1.5px solid;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.swipe-btn-left{
+  background:rgba(192,64,64,.08);border-color:var(--swipe-left);
+  color:var(--swipe-left);
+}
+.swipe-btn-left:hover{background:rgba(192,64,64,.18);}
+.swipe-btn-right{
+  background:rgba(64,160,96,.08);border-color:var(--swipe-right);
+  color:var(--swipe-right);
+}
+.swipe-btn-right:hover{background:rgba(64,160,96,.18);}
+.swipe-btn:disabled{opacity:.3;cursor:not-allowed;}
+
+.flip-btn{
+  padding:10px 20px;border-radius:40px;
+  border:1.5px solid var(--border);
+  background:transparent;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:13px;
+  cursor:pointer;transition:all .2s;
+}
+.flip-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* DOTS */
+.deck-dots{
+  display:flex;flex-wrap:wrap;gap:5px;
+  justify-content:center;margin-top:14px;
+  max-width:520px;margin-left:auto;margin-right:auto;
+}
+.dot{
+  width:26px;height:26px;border-radius:50%;
+  border:1.5px solid var(--border);background:transparent;
+  font-size:9px;font-weight:600;color:var(--text-dim);
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+}
+.dot:hover{border-color:var(--accent);color:var(--text);}
+.dot.current{background:var(--accent);border-color:var(--accent);color:#0f0e0c;}
+.dot.known{background:rgba(64,160,96,.2);border-color:var(--swipe-right);color:var(--swipe-right);}
+.dot.repeat{background:rgba(192,64,64,.2);border-color:var(--swipe-left);color:var(--swipe-left);}
+
+/* ─── SRS QUEUE SCREEN ─── */
+#srs-screen{display:none;}
+.srs-empty{text-align:center;padding:60px 20px;}
+.srs-empty h3{font-family:'Playfair Display',serif;font-size:32px;margin-bottom:10px;}
+.srs-empty p{color:var(--text-muted);margin-bottom:24px;}
+
+/* ─── FINISH ─── */
+#finish-screen{display:none;text-align:center;padding:60px 20px;}
+#finish-screen h2{font-family:'Playfair Display',serif;font-size:44px;font-weight:900;margin-bottom:10px;}
+#finish-screen p{color:var(--text-muted);font-size:15px;margin-bottom:24px;}
+
+.btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.nav-btn{
+  padding:11px 24px;border-radius:40px;
+  border:1.5px solid var(--border);background:transparent;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .2s;
+}
+.nav-btn:hover{border-color:var(--accent);color:var(--accent);}
+.nav-btn.primary{background:var(--accent);border-color:var(--accent);color:#0f0e0c;font-weight:700;}
+.nav-btn.primary:hover{background:var(--accent2);}
+
+/* ─── STATS BAR ─── */
+.stats-bar{
+  display:flex;gap:12px;margin-bottom:14px;
+}
+.stat-chip{
+  flex:1;background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px;text-align:center;
+}
+.stat-val{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;}
+.stat-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.stat-chip.green .stat-val{color:var(--swipe-right);}
+.stat-chip.red .stat-val{color:var(--swipe-left);}
+.stat-chip.gold .stat-val{color:var(--accent);}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* ─── PROFILE SCREEN ─── */
+#profile-screen{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;min-height:80vh;padding:32px 20px;
+  text-align:center;position:relative;z-index:1;
+}
+.profile-logo{
+  font-family:'Playfair Display',serif;font-size:36px;font-weight:900;
+  margin-bottom:8px;
+}
+.profile-logo span{color:var(--accent);}
+.profile-sub{color:var(--text-muted);font-size:14px;margin-bottom:36px;}
+.profile-title{
+  font-family:'Playfair Display',serif;font-size:22px;font-weight:700;
+  margin-bottom:20px;color:var(--text);
+}
+.profiles-row{
+  display:flex;gap:20px;justify-content:center;flex-wrap:wrap;
+  margin-bottom:28px;
+}
+.profile-btn{
+  width:130px;padding:20px 12px;
+  background:var(--surface);border:2px solid var(--border);
+  border-radius:16px;cursor:pointer;transition:all 0.2s;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.profile-btn:hover{border-color:var(--accent);transform:translateY(-3px);}
+.profile-btn.selected{border-color:var(--accent);background:rgba(232,197,71,0.08);}
+.profile-avatar{
+  width:64px;height:64px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;background:var(--surface2);
+}
+.profile-name{font-size:15px;font-weight:600;color:var(--text);}
+.profile-stats-mini{font-size:11px;color:var(--text-muted);}
+
+.new-profile-area{
+  background:var(--surface);border:1.5px dashed var(--border);
+  border-radius:14px;padding:20px;width:100%;max-width:340px;margin:0 auto;
+}
+.new-profile-area label{
+  font-size:11px;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--text-muted);display:block;margin-bottom:10px;
+}
+.profile-input{
+  width:100%;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:14px;padding:10px 12px;outline:none;transition:border-color .2s;
+  margin-bottom:10px;
+}
+.profile-input:focus{border-color:var(--accent);}
+.avatar-picker{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;justify-content:center;
+}
+.av-opt{
+  width:40px;height:40px;border-radius:50%;border:2px solid var(--border);
+  background:var(--surface2);cursor:pointer;font-size:20px;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.av-opt:hover,.av-opt.picked{border-color:var(--accent);background:rgba(232,197,71,0.1);}
+.create-profile-btn{
+  width:100%;padding:12px;background:var(--accent);border:none;border-radius:8px;
+  color:#0f0e0c;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .2s;
+}
+.create-profile-btn:hover{background:var(--accent2);}
+
+/* ─── HEADER PROFILE CHIP ─── */
+.profile-chip{
+  display:flex;align-items:center;gap:7px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:4px 10px 4px 6px;cursor:pointer;
+  transition:all .2s;font-size:12px;
+}
+.profile-chip:hover{border-color:var(--accent);}
+.profile-chip-av{font-size:18px;line-height:1;}
+.profile-chip-name{color:var(--text);font-weight:500;}
+
+/* ─── TOPIC PROGRESS ─── */
+.tc-progress{
+  margin-top:7px;
+  height:4px;background:var(--border);border-radius:4px;overflow:hidden;
+}
+.tc-progress-fill{
+  height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--swipe-right),#6dd68a);
+  transition:width .4s ease;
+}
+.tc-counts{
+  display:flex;justify-content:space-between;
+  font-size:10px;color:var(--text-dim);margin-top:4px;
+}
+.tc-counts .known-c{color:var(--swipe-right);}
+
+/* Mobile tweaks */
+@media(max-width:480px){
+  .topics-grid{grid-template-columns:repeat(2,1fr);}
+  .card-word{font-size:22px;}
+  .profiles-row{gap:12px;}
+  .profile-btn{width:110px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Wort<span>karten</span></div>
+  <div class="header-right">
+    <div class="profile-chip" id="header-profile" onclick="switchProfile()" style="display:none">
+      <span class="profile-chip-av" id="header-avatar">👤</span>
+      <span class="profile-chip-name" id="header-name">Профиль</span>
+    </div>
+  </div>
+</header>
+
+<!-- PROFILE SELECT SCREEN -->
+<div id="profile-screen">
+  <div class="profile-logo">Wort<span>karten</span></div>
+  <div class="profile-sub">Goethe-Institut A1–C1 · Выбери профиль</div>
+
+  <div class="profile-title" id="prof-screen-title">Кто учится?</div>
+
+  <div class="profiles-row" id="profiles-row"></div>
+
+  <div class="new-profile-area" id="new-profile-area">
+    <label>Новый профиль</label>
+    <input class="profile-input" id="new-name-input" placeholder="Твоё имя" maxlength="20">
+    <div class="avatar-picker" id="avatar-picker"></div>
+    <button class="create-profile-btn" onclick="createProfile()">Создать профиль</button>
+  </div>
+</div>
+
+<div class="screen" id="home-screen">
+  <div class="home-title">Учи<br><em>немецкий</em></div>
+  <div class="home-sub">Goethe-Institut · A1 · A2 · B1 · B2 Aspekte neu · C1</div>
+
+  <!-- SRS BANNER -->
+  <div class="srs-banner" id="srs-banner" style="display:none">
+    <div class="srs-banner-icon">🔁</div>
+    <div class="srs-banner-text">
+      <h4>Время повторить!</h4>
+      <p>У тебя <span class="srs-count" id="srs-due-count">0</span> слов готовы к повторению</p>
+    </div>
+    <button class="srs-start-btn" onclick="startSrsReview()">Повторить →</button>
+  </div>
+
+  <!-- LEVEL TABS -->
+  <div class="section-label">Уровень</div>
+  <div class="level-tabs" id="level-tabs">
+    <button class="level-tab active" data-level="A1">A1</button>
+    <button class="level-tab" data-level="A2">A2</button>
+    <button class="level-tab" data-level="B1">B1</button>
+    <button class="level-tab" data-level="B2">B2</button>
+    <button class="level-tab" data-level="C1">C1</button>
+  </div>
+
+  <!-- TOPICS -->
+  <div class="section-label">Темы</div>
+  <div class="topics-grid" id="topics-grid"></div>
+
+  <div class="divider">или введи свои слова</div>
+  <div class="custom-box">
+    <label>Слова через запятую или с новой строки</label>
+    <textarea id="words-input" placeholder="Haus, Hund, fahren, schön..."></textarea>
+    <button class="gen-btn" id="gen-btn" onclick="generateCustom()">✦ Создать карточки</button>
+    <div class="error-msg" id="error-msg"></div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="screen" id="loading-screen">
+  <div class="loader-ring"></div>
+  <strong id="loading-title">Генерируем карточки...</strong>
+  <p>Несколько секунд</p>
+</div>
+
+<!-- CARDS -->
+<div class="screen" id="cards-screen">
+  <div class="cards-header">
+    <button class="back-link" onclick="goHome()">← К темам</button>
+    <div class="deck-title" id="deck-title"></div>
+    <div class="cards-meta"><strong id="card-counter">1</strong>/<strong id="card-total">0</strong></div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-chip green"><div class="stat-val" id="stat-known">0</div><div class="stat-label">Знаю</div></div>
+    <div class="stat-chip red"><div class="stat-val" id="stat-repeat">0</div><div class="stat-label">Повторить</div></div>
+    <div class="stat-chip gold"><div class="stat-val" id="stat-left">0</div><div class="stat-label">Осталось</div></div>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+  <div class="swipe-hints">
+    <div class="hint hint-left" id="hint-left">← Повторить</div>
+    <div style="font-size:11px;color:var(--text-dim)">нажми карточку</div>
+    <div class="hint hint-right" id="hint-right">Знаю →</div>
+  </div>
+
+  <div class="card-stage" id="card-stage">
+    <div class="swipe-overlay" id="swipe-overlay"></div>
+    <div class="card-container" id="card-container">
+      <div class="card-inner" id="card-inner">
+        <div class="card-face card-front" id="card-front">
+          <div class="card-img" id="card-img">
+            <span id="card-emoji">🏠</span>
+            <div class="level-badge" id="level-badge">A1</div>
+            <div class="gender-badge" id="gender-badge">das</div>
+          </div>
+          <div class="card-word-strip">
+            <span class="card-word" id="card-word">Haus</span>
+            <span class="flip-hint">нажми →</span>
+          </div>
+        </div>
+
+        <div class="card-face card-back" id="card-back">
+          <div>
+            <div class="back-article" id="back-article"></div>
+            <div class="back-word" id="back-word">Haus</div>
+            <div class="back-translation" id="back-translation">дом</div>
+          </div>
+          <div class="back-example" id="back-example">
+            <div id="back-ex-de"></div>
+            <div class="ex-ru" id="back-ex-ru"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="swipe-buttons">
+    <button class="swipe-btn swipe-btn-left" onclick="swipeCard('left')">✗ Ещё раз</button>
+    <button class="flip-btn" id="flip-btn" onclick="flipCard()">↻ Показать</button>
+    <button class="swipe-btn swipe-btn-right" onclick="swipeCard('right')">✓ Знаю</button>
+  </div>
+
+  <div class="deck-dots" id="deck-dots"></div>
+</div>
+
+<!-- FINISH -->
+<div class="screen" id="finish-screen">
+  <div style="font-size:50px;margin-bottom:14px;" id="finish-emoji">🎉</div>
+  <h2 id="finish-title">Отлично!</h2>
+  <p id="finish-text">Колода завершена!</p>
+  <div class="btn-row" style="margin-bottom:16px;">
+    <button class="nav-btn primary" onclick="restartDeck()">↺ Пройти снова</button>
+    <button class="nav-btn" onclick="goHome()">← К темам</button>
+  </div>
+  <div id="finish-stats" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px;"></div>
+</div>
+
+<!-- SRS empty -->
+<div class="screen" id="srs-screen">
+  <div class="srs-empty">
+    <div style="font-size:48px;margin-bottom:14px;">✅</div>
+    <h3>Всё повторено!</h3>
+    <p>Следующие слова будут готовы завтра.</p>
+    <button class="nav-btn primary" onclick="goHome()">← К темам</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+//  FULL WORD LISTS FROM PDFs (paginated at 15)
+// ════════════════════════════════════════════
+const PAGE_SIZE = 10;
+
+// Each topic has ALL words from the PDF. They get auto-split into pages.
+const TOPICS_RAW = {
+  A1: [
+    { id:"a1_person",   name:"Person & Familie", emoji:"👤",
+      words:["der Name","der Vorname","die Adresse","das Alter","das Geburtsdatum","der Geburtsort","die Mutter","der Vater","die Schwester","der Bruder","die Tochter","der Sohn","die Großmutter","der Großvater","die Familie","die Geschwister","die Eltern","die Ehefrau","der Ehemann","der Freund","die Freundin","die Verwandten","der Bekannte","verheiratet","ledig"]
+    },
+    { id:"a1_wohnen",   name:"Wohnen", emoji:"🏠",
+      words:["das Haus","die Wohnung","das Zimmer","die Küche","das Bad","das Schlafzimmer","das Wohnzimmer","der Garten","der Balkon","die Treppe","der Aufzug","die Miete","der Mietvertrag","der Vermieter","der Nachmieter","einziehen","ausziehen","umziehen","das Sofa","der Schrank","das Bett","der Tisch","der Stuhl","die Lampe","das Regal"]
+    },
+    { id:"a1_essen",    name:"Essen & Trinken", emoji:"🍽️",
+      words:["das Brot","das Brötchen","die Milch","der Kaffee","der Tee","das Wasser","der Saft","das Fleisch","der Fisch","das Gemüse","das Obst","der Apfel","die Banane","die Birne","das Ei","die Butter","der Käse","der Schinken","der Reis","die Kartoffel","die Tomate","das Öl","das Salz","der Zucker","der Wein","das Bier","essen","trinken","kochen","schmecken","der Hunger","der Durst","Guten Appetit"]
+    },
+    { id:"a1_transport",name:"Verkehr & Reisen", emoji:"🚆",
+      words:["das Auto","das Fahrrad","der Bus","die Bahn","die S-Bahn","das Taxi","das Flugzeug","der Bahnhof","der Flughafen","die Haltestelle","das Gleis","der Bahnsteig","die Fahrkarte","der Fahrplan","abfahren","ankommen","einsteigen","aussteigen","umsteigen","fahren","fliegen","die Autobahn","das Hotel","das Gepäck","der Koffer","der Pass","der Ausweis","reisen","der Urlaub","das Ausland"]
+    },
+    { id:"a1_einkaufen",name:"Einkaufen", emoji:"🛍️",
+      words:["kaufen","verkaufen","das Geschäft","die Kasse","der Preis","bezahlen","bar","billig","teuer","das Angebot","die Kleidung","die Jacke","der Schuh","die Größe","das T-Shirt","der Pullover","die Hose","das Kleid","der Rock","das Kaufhaus","der Supermarkt","der Markt","der Kiosk","die Bäckerei","kosten","wie viel"]
+    },
+    { id:"a1_koerper",  name:"Körper & Gesundheit", emoji:"💪",
+      words:["der Kopf","das Auge","das Ohr","der Mund","der Hals","der Arm","die Hand","das Bein","der Fuß","der Bauch","der Rücken","das Haar","der Arzt","krank","das Fieber","weh tun","der Schmerz","die Apotheke","das Medikament","gesund","die Erkältung","die Grippe"]
+    },
+    { id:"a1_alltag",   name:"Alltag & Aktivitäten", emoji:"☀️",
+      words:["aufstehen","frühstücken","arbeiten","schlafen","waschen","duschen","anziehen","ausziehen","einkaufen","kochen","essen","trinken","lernen","lesen","schreiben","fernsehen","spielen","wandern","schwimmen","tanzen","Sport treiben","spazieren gehen","nach Hause gehen","telefonieren","schicken"]
+    },
+    { id:"a1_arbeit",   name:"Arbeit & Beruf", emoji:"💼",
+      words:["die Arbeit","arbeiten","der Beruf","der Arbeitsplatz","der Kollege","der Chef","die Firma","der Job","verdienen","der Urlaub","das Praktikum","die Stelle","der Arzt","der Lehrer","der Verkäufer","der Fahrer","der Beamte","die Hausfrau","der Hausmann","suchen","finden","beginnen","aufhören","selbstständig","arbeitslos"]
+    },
+    { id:"a1_kommunikation", name:"Kommunikation", emoji:"📞",
+      words:["anrufen","das Handy","das Telefon","die E-Mail","schreiben","der Brief","die Briefmarke","die Post","schicken","fragen","antworten","sprechen","verstehen","hören","sagen","erklären","wiederholen","buchstabieren","die Adresse","die Postleitzahl","der Absender","der Empfänger","der Anruf","der Anrufbeantworter","die Vorwahl"]
+    },
+    { id:"a1_zeit",     name:"Zeit & Kalender", emoji:"🕐",
+      words:["die Uhr","die Stunde","die Minute","die Sekunde","der Tag","die Woche","der Monat","das Jahr","der Morgen","der Vormittag","der Mittag","der Nachmittag","der Abend","die Nacht","das Wochenende","der Montag","der Dienstag","der Mittwoch","der Donnerstag","der Freitag","der Samstag","der Sonntag","der Januar","der Februar","der März","der April","der Mai","der Juni","der Juli","der August","pünktlich","wann","wie lange","dauern"]
+    },
+    { id:"a1_freizeit", name:"Freizeit & Hobby", emoji:"⚽",
+      words:["das Hobby","der Sport","spielen","schwimmen","wandern","tanzen","lesen","fernsehen","das Kino","der Fußball","das Fahrrad","das Schwimmbad","der See","der Garten","das Buch","die Musik","die CD","das Lied","das Konzert","das Spiel","Karten spielen","grillen","der Ausflug","das Wochenende","die Freizeit"]
+    },
+    { id:"a1_schule",   name:"Schule & Lernen", emoji:"📚",
+      words:["die Schule","der Schüler","der Lehrer","die Klasse","das Buch","das Heft","der Bleistift","der Kugelschreiber","lernen","verstehen","fragen","antworten","lesen","schreiben","der Unterricht","die Pause","die Hausaufgabe","der Kindergarten","der Kurs","die Sprache","Deutsch lernen","der Deutschkurs","buchstabieren","das Wort","der Satz"]
+    },
+    { id:"a1_wegweiser",name:"Orientierung & Weg", emoji:"🗺️",
+      words:["wo","wohin","woher","links","rechts","geradeaus","die Straße","die Ecke","der Platz","die Kreuzung","hier","dort","neben","gegenüber","hinter","vor","über","unter","die Stadt","das Dorf","der Ort","die Adresse","der Plan","der Stadtplan","die Richtung"]
+    },
+    { id:"a1_wetter",   name:"Wetter & Natur", emoji:"🌤️",
+      words:["das Wetter","die Sonne","der Regen","der Schnee","der Wind","kalt","warm","heiß","schön","schlecht","regnen","schneien","scheinen","bewölkt","der Baum","die Blume","der Garten","das Meer","der See","der Berg","die Jahreszeit","der Frühling","der Sommer","der Herbst","der Winter"]
+    },
+  ],
+
+  A2: [
+    { id:"a2_berufe",   name:"Berufe", emoji:"👩‍⚕️",
+      words:["der Arzt","der Lehrer","der Kellner","der Koch","der Polizist","der Verkäufer","der Journalist","der Mechaniker","der Sänger","der Schauspieler","der Friseur","der Bäcker","der Handwerker","der Techniker","der Künstler","der Rentner","der Krankenpfleger","der Auszubildende","der Angestellte","der Kaufmann","der Fahrer","der Musiker","der Babysitter","der Manager","der Autor"]
+    },
+    { id:"a2_alltag1",  name:"Alltag 1", emoji:"🌅",
+      words:["aufräumen","putzen","die Wäsche waschen","bügeln","kochen","einkaufen","spazieren gehen","aufstehen","frühstücken","schlafen gehen","sich duschen","sich anziehen","sich ausruhen","Hausaufgaben machen","den Haushalt machen","Müll rausbringen","das Geschirr spülen","Fenster putzen","Staub saugen","einräumen","ausräumen","aufpassen","sich beeilen","sich verabreden","ausgehen"]
+    },
+    { id:"a2_gefuehle", name:"Gefühle & Charakter", emoji:"❤️",
+      words:["sich freuen","sich ärgern","sich fühlen","traurig","glücklich","nervös","aufgeregt","müde","fröhlich","böse","froh","begeistert","sauer","enttäuscht","überrascht","ängstlich","neugierig","freundlich","sympathisch","lustig","langweilig","fleißig","faul","klug","geduldig"]
+    },
+    { id:"a2_verkehr",  name:"Verkehr & Mobilität", emoji:"🚗",
+      words:["der Fahrplan","umsteigen","die Verspätung","das Gleis","der Führerschein","parken","die Kreuzung","die Ampel","das Verkehrsmittel","die Autobahn","die Straßenbahn","die U-Bahn","der Motorroller","der Lkw","die Haltestelle","der Bahnsteig","das Ticket","der Anschluss","erreichen","der Stau","das Fahrrad","die Bahn","abfahren","ankommen","einsteigen"]
+    },
+    { id:"a2_wetter",   name:"Wetter & Klima", emoji:"🌤️",
+      words:["die Sonne","der Regen","der Schnee","bewölkt","windig","kalt","warm","das Gewitter","die Temperatur","der Wind","neblig","trocken","nass","sonnig","die Wolke","schneien","regnen","blitzen","donnern","stürmen","hageln","der Grad","das Klima","die Jahreszeit","der Wetterbericht"]
+    },
+    { id:"a2_wohnen1",  name:"Wohnung & Einrichtung", emoji:"🛋️",
+      words:["das Wohnzimmer","das Schlafzimmer","die Küche","das Bad","das Arbeitszimmer","der Flur","der Keller","der Dachboden","die Garage","das Erdgeschoss","der erste Stock","der Aufzug","die Möbel","das Sofa","der Tisch","der Stuhl","das Bett","der Schrank","das Regal","die Lampe","der Teppich","das Bild","der Spiegel","die Heizung","die Waschmaschine"]
+    },
+    { id:"a2_wohnen2",  name:"Mieten & Umziehen", emoji:"🏠",
+      words:["die Miete","der Vermieter","der Mietvertrag","kündigen","umziehen","einziehen","ausziehen","die Wohnungssuche","besichtigen","renovieren","die Nebenkosten","das Erdgeschoss","der Hausrat","die Einrichtung","der Balkon","der Garten","anmelden","abmelden","das Formular","die Kaution","der Makler","die Anzeige","suchen","finden","reservieren"]
+    },
+    { id:"a2_gesundheit1", name:"Gesundheit & Körper", emoji:"🏥",
+      words:["erkältet","die Grippe","der Schmerz","das Medikament","die Tablette","der Arzttermin","untersuchen","das Krankenhaus","die Apotheke","die Krankenkasse","der Arzt","die Krankheit","der Blutdruck","das Fieber","husten","niesen","der Rücken","der Bauch","der Kopf","die Hand","der Arm","das Bein","das Auge","der Hals","Schmerzen haben"]
+    },
+    { id:"a2_gesundheit2", name:"Arztbesuch & Behandlung", emoji:"💊",
+      words:["der Arzt","die Ärztin","der Termin","die Praxis","die Sprechstunde","untersuchen","das Rezept","die Krankenkasse","versichert","das Medikament","einnehmen","dreimal täglich","die Erkältung","die Allergie","der Husten","Fieber messen","Blut abnehmen","das Krankenhaus","die Notaufnahme","der Krankenwagen","sich erholen","im Bett bleiben","die Ruhepause","krank schreiben","gesund werden"]
+    },
+    { id:"a2_schule",   name:"Schule & Ausbildung", emoji:"📚",
+      words:["die Klasse","das Fach","die Note","das Zeugnis","die Hausaufgabe","der Stundenplan","das Abitur","das Stipendium","die Prüfung","studieren","die Universität","der Student","der Direktor","das Sekretariat","die Klassenfahrt","Biologie","Chemie","Deutsch","Englisch","Mathematik","Musik","Sport","Geschichte","Geografie","die Berufsschule"]
+    },
+    { id:"a2_technologie", name:"Technik & Internet", emoji:"💻",
+      words:["der Computer","das Internet","die Datei","speichern","herunterladen","die Webseite","das Passwort","der Link","chatten","die E-Mail","der Blog","das Handy","das Smartphone","die App","drucken","der Drucker","das Foto","fotografieren","anklicken","der Browser","die Suchmaschine","das Netzwerk","online","das Profil","posten"]
+    },
+    { id:"a2_einkaufen1", name:"Einkaufen & Preise", emoji:"🛒",
+      words:["das Kaufhaus","das Einkaufszentrum","der Flohmarkt","der Markt","der Preis","günstig","preiswert","teuer","billig","die Qualität","das Angebot","bestellen","liefern","bezahlen","bar","die Kreditkarte","die Kasse","das Wechselgeld","der Kassenbon","umtauschen","zurückgeben","die Reklamation","ausverkauft","im Angebot","der Rabatt"]
+    },
+    { id:"a2_einkaufen2", name:"Kleidung & Mode", emoji:"👗",
+      words:["die Kleidung","die Jacke","der Schuh","die Größe","das T-Shirt","der Pullover","die Hose","das Kleid","der Rock","das Hemd","die Bluse","der Mantel","der Stiefel","die Jeans","der Anzug","bunt","eng","weit","lang","kurz","die Farbe","passen","stehen","anprobieren","die Anprobe"]
+    },
+    { id:"a2_freizeit1", name:"Freizeit & Sport", emoji:"⚽",
+      words:["der Sport","trainieren","der Sportverein","die Mannschaft","der Wettbewerb","das Fußballspiel","Basketball","Volleyball","Tennis","schwimmen","joggen","wandern","Rad fahren","Ski fahren","der Wettkampf","gewinnen","verlieren","das Tor","der Spieler","das Training","der Club","der Fan","die Meisterschaft","der Pokal","aktiv"]
+    },
+    { id:"a2_freizeit2", name:"Kultur & Unterhaltung", emoji:"🎸",
+      words:["die Gitarre","das Klavier","das Konzert","das Festival","das Museum","die Ausstellung","das Theater","das Kino","der Film","das Lied","die Musik","das Instrument","spielen","der Sänger","der Künstler","das Buch","lesen","der Roman","die Zeitung","die Zeitschrift","das Radio","der Fernseher","die Sendung","der Kanal","das Programm"]
+    },
+    { id:"a2_reisen",   name:"Reisen & Unterkunft", emoji:"✈️",
+      words:["das Hotel","das Zimmer","die Übernachtung","reservieren","die Rezeption","einchecken","auschecken","das Einzelzimmer","das Doppelzimmer","die Vollpension","die Halbpension","das Frühstück","der Schlüssel","der Koffer","das Gepäck","der Pass","das Visum","die Reise","buchen","das Reisebüro","der Reiseführer","die Sehenswürdigkeit","besichtigen","der Tourist","die Unterkunft"]
+    },
+    { id:"a2_essen1",   name:"Restaurant & Mahlzeiten", emoji:"🍽️",
+      words:["das Restaurant","das Café","die Speisekarte","bestellen","der Kellner","die Portion","die Vorspeise","das Hauptgericht","das Dessert","die Rechnung","das Trinkgeld","zahlen","schmecken","der Tisch","reservieren","die Mahlzeit","das Frühstück","das Mittagessen","das Abendessen","das Gericht","die Küche","vegetarisch","das Menü","Guten Appetit","empfehlen"]
+    },
+    { id:"a2_kommunikation", name:"Kommunikation & Post", emoji:"✉️",
+      words:["die E-Mail","schreiben","beantworten","die Nachricht","die Postkarte","das Paket","schicken","die Adresse","die Postleitzahl","der Absender","der Empfänger","die Post","der Brief","die Briefmarke","der Anruf","anrufen","das Handy","die Voicemail","der Anrufbeantworter","Bescheid geben","sich melden","erreichen","mitteilen","benachrichtigen","die Mitteilung"]
+    },
+    { id:"a2_koerpersprache", name:"Körpersprache & Höflichkeit", emoji:"🤝",
+      words:["bitte","danke","entschuldigung","Guten Morgen","Guten Tag","Guten Abend","auf Wiedersehen","tschüss","herzlich willkommen","die Hand geben","lächeln","nicken","die Geste","freundlich","höflich","sich vorstellen","sich bedanken","sich entschuldigen","sich verabschieden","bitten","anbieten","einladen","ablehnen","zustimmen","widersprechen"]
+    },
+    { id:"a2_bank_post",name:"Bank & Behörden", emoji:"🏦",
+      words:["die Bank","das Konto","überweisen","abheben","einzahlen","der Kontostand","die Kreditkarte","bar bezahlen","der Automat","die PIN","das Formular","ausfüllen","unterschreiben","die Unterschrift","der Ausweis","die Behörde","das Amt","anmelden","der Antrag","beantragen","die Gebühr","die Steuer","das Rathaus","der Schalter","die Öffnungszeiten"]
+    },
+    { id:"a2_dienstleistungen", name:"Dienstleistungen", emoji:"🔧",
+      words:["die Werkstatt","reparieren","die Reparatur","der Mechaniker","kaputt","defekt","der Elektriker","der Klempner","bestellen","liefern","die Lieferung","der Kundendienst","reklamieren","umtauschen","die Garantie","der Handwerker","beauftragen","montieren","installieren","prüfen","der Techniker","warten","die Wartung","das Ersatzteil","die Rechnung"]
+    },
+  ],
+
+  B1: [
+    { id:"b1_meinungen", name:"Meinungen äußern", emoji:"🗣️",
+      words:["die Meinung","diskutieren","begründen","zustimmen","widersprechen","überzeugen","behaupten","kritisieren","vorschlagen","vergleichen","meiner Meinung nach","ich finde","ich glaube","einerseits","andererseits","der Standpunkt","die Ansicht","der Aspekt","die Aussage","das Argument","überzeugend","nachvollziehbar","zweifeln","in Frage stellen","die Diskussion"]
+    },
+    { id:"b1_arbeit1",  name:"Arbeit & Bewerbung", emoji:"💼",
+      words:["die Bewerbung","das Vorstellungsgespräch","die Stelle","kündigen","das Gehalt","der Vertrag","die Erfahrung","die Ausbildung","selbstständig","der Stellenwechsel","das Lebenslauf","das Anschreiben","die Qualifikation","die Kenntnisse","der Arbeitgeber","der Arbeitnehmer","das Arbeitszeugnis","die Probezeit","der Arbeitsvertrag","das Praktikum","die Firma","der Betrieb","einstellen","entlassen","befördern"]
+    },
+    { id:"b1_arbeit2",  name:"Arbeitsleben & Karriere", emoji:"📊",
+      words:["die Karriere","der Vorgesetzte","der Kollege","die Teamarbeit","das Meeting","die Besprechung","das Projekt","die Deadline","der Stress","überstunden machen","das Homeoffice","der Feierabend","der Urlaub","der Krankenstand","die Weiterbildung","das Seminar","die Fortbildung","die Abteilung","der Chef","der Mitarbeiter","produktiv","effizient","die Aufgabe","verantwortlich","zuverlässig"]
+    },
+    { id:"b1_gesellschaft", name:"Gesellschaft & Politik", emoji:"🌍",
+      words:["die Demokratie","die Gesellschaft","das Gesetz","die Regel","die Pflicht","das Recht","der Bürger","wählen","die Politik","der Staat","die Regierung","das Parlament","die Partei","die Opposition","die Wahl","die Freiheit","die Gleichheit","die Gerechtigkeit","der Konflikt","der Frieden","die Integration","die Migration","die Minderheit","die Mehrheit","sozial"]
+    },
+    { id:"b1_umwelt",   name:"Umwelt & Klimawandel", emoji:"🌱",
+      words:["die Umwelt","der Klimawandel","recyceln","die Energie","erneuerbar","der Müll","sparen","nachhaltig","der Naturschutz","das Wasser","die Verschmutzung","der CO2-Ausstoß","die Solarenergie","die Windenergie","der Strom","das Elektroauto","der Plastikmüll","die Abgase","der Treibhauseffekt","die Erderwärmung","der Naturkatastrophe","das Ökosystem","biologisch","der Kompost","die Ressourcen"]
+    },
+    { id:"b1_medien",   name:"Medien & Kommunikation", emoji:"📱",
+      words:["die Medien","das Blog","die Werbung","der Einfluss","kommunizieren","veröffentlichen","teilen","abonnieren","kommentieren","die Webseite","die sozialen Netzwerke","der Post","der Tweet","der Kanal","der Podcast","das Streaming","die Plattform","der Influencer","die Fake News","die Meinungsfreiheit","die Zensur","der Datenschutz","das Impressum","die Quelle","recherchieren"]
+    },
+    { id:"b1_reisen",   name:"Reisen & Tourismus", emoji:"🗺️",
+      words:["die Unterkunft","reservieren","die Sehenswürdigkeit","besichtigen","der Reiseführer","die Kultur","das Visum","der Zoll","die Währung","empfehlen","das Abenteuer","die Führung","das Denkmal","das Museum","die Altstadt","die Attraktion","der Strand","das Gebirge","die Landschaft","die Hauptstadt","die Grenze","das Ticket","das Gate","der Abflug","die Ankunft"]
+    },
+    { id:"b1_gesundheit", name:"Gesundheit & Ernährung", emoji:"🧘",
+      words:["die Ernährung","ausgewogen","Sport treiben","sich erholen","der Stress","fit bleiben","das Gewicht","die Allergie","behandeln","die Bewegung","das Vitamin","die Kalorien","vegetarisch","vegan","biologisch","der Arzt","die Vorsorge","das Wohlbefinden","die Entspannung","meditieren","das Yoga","der Schlaf","die Diät","die Sucht","gesund leben"]
+    },
+    { id:"b1_bildung",  name:"Bildung & Studium", emoji:"🎓",
+      words:["das Studium","die Universität","das Semester","die Prüfung","bestehen","durchfallen","das Referat","forschen","der Abschluss","der Kurs","die Vorlesung","das Seminar","die Hausarbeit","die Note","das Stipendium","das Austauschprogramm","der Campus","die Bibliothek","der Professor","die Forschung","promovieren","der Bachelor","der Master","die Fachhochschule","das Praktikum"]
+    },
+    { id:"b1_kultur",   name:"Kultur & Kunst", emoji:"🎨",
+      words:["die Literatur","der Roman","das Gedicht","das Gemälde","das Theater","die Oper","der Künstler","die Ausstellung","der Regisseur","das Konzert","die Skulptur","die Architektur","das Museum","das Denkmal","der Schriftsteller","komponieren","aufführen","das Kulturerbe","der Bestseller","das Meisterwerk","kreativ","die Inspiration","das Motiv","der Stil","traditionell"]
+    },
+    { id:"b1_wohnen",   name:"Stadt & Wohnen", emoji:"🏙️",
+      words:["das Viertel","der Vorort","der Verkehr","die Einrichtung","mieten","das Eigentum","renovieren","der Architekt","die Infrastruktur","das Zentrum","die Innenstadt","der Stadtteil","die Nachbarschaft","der öffentliche Nahverkehr","das Parkhaus","der Bürgersteig","die Ampel","die Fußgängerzone","der Platz","der Marktplatz","die Brücke","der Fluss","der Park","der Bahnhof","das Rathaus"]
+    },
+    { id:"b1_gefuehle",  name:"Beziehungen & Emotionen", emoji:"💬",
+      words:["die Beziehung","sich verstehen","vertrauen","enttäuscht","begeistert","eifersüchtig","vermissen","unterstützen","streiten","versöhnen","lieben","hassen","bewundern","respektieren","sich entschuldigen","verzeihen","die Freundschaft","die Partnerschaft","die Ehe","trennen","heiraten","sich verlieben","die Zuneigung","die Eifersucht","die Enttäuschung"]
+    },
+    { id:"b1_wirtschaft", name:"Wirtschaft & Finanzen", emoji:"💰",
+      words:["die Wirtschaft","das Unternehmen","der Markt","investieren","der Gewinn","der Verlust","die Steuer","exportieren","importieren","die Krise","das Wachstum","die Inflation","die Arbeitslosigkeit","das Budget","die Schulden","das Kapital","die Aktie","die Bank","der Kredit","die Versicherung","die Rente","das Gehalt","der Mindestlohn","die Wirtschaftspolitik","globalisieren"]
+    },
+    { id:"b1_wissenschaft", name:"Wissenschaft & Forschung", emoji:"🔬",
+      words:["die Wissenschaft","forschen","das Experiment","das Labor","die Theorie","die Hypothese","beweisen","widerlegen","die Entdeckung","die Erfindung","die Technologie","der Fortschritt","die Innovation","das Ergebnis","die Studie","analysieren","untersuchen","entwickeln","der Wissenschaftler","die Forschung","das Phänomen","die Statistik","das Modell","veröffentlichen","das Ergebnis"]
+    },
+    { id:"b1_konflikte", name:"Konflikte & Lösungen", emoji:"🤝",
+      words:["der Konflikt","der Streit","die Lösung","verhandeln","kompromissbereit","die Einigung","der Kompromiss","das Missverständnis","die Kritik","konstruktiv","destruktiv","vermitteln","der Mediator","das Gespräch","der Vorwurf","sich beschweren","widersprechen","nachgeben","die Meinung vertreten","der Standpunkt","fair","unfair","die Unstimmigkeit","klären","schlichten"]
+    },
+  ],
+
+  B2: [
+    { id:"b2_heimat1",  name:"Heimat & Migration (Kap.1a)", emoji:"🏡",
+      words:["die Heimat","das Fernweh","auswandern","sich einleben","die Auslandserfahrung","die Wohnungssuche","der Arbeitsvertrag","der Handyvertrag","der Mietvertrag","knüpfen","der Kontakt","beantragen","eröffnen","bereuen","riskieren","wagen","spontan","abenteuerlich","aufgeregt","gestresst","sehnsüchtig","mittlerweile","zwischendurch","die Erfahrung machen","den Horizont erweitern"]
+    },
+    { id:"b2_heimat2",  name:"Sprachen & Identität (Kap.1b)", emoji:"🌐",
+      words:["die Landessprache","die Amtssprache","die Verwaltungssprache","die Identität","multikulturell","die Vielfalt","vielsprachig","die Mehrsprachigkeit","die Vielsprachigkeit","anerkennen","komplex","konfrontieren","die Elite","das Parlament","der Sachverhalt","trösten","die Vertrautheit","die Sprachenvielfalt","das Sprachgebiet","die Sprachregion","einheitlich","amtlich","beherrschen","voraussetzen","der Wandel"]
+    },
+    { id:"b2_kommunikation1", name:"Körpersprache & Signale (Kap.2a)", emoji:"🤝",
+      words:["die Körpersprache","die Mimik","die Geste","die Emotion","das Körpersignal","verraten","instinktiv","wahrnehmen","deuten","bestimmen","eindeutig","das Signal","angemessen","wesentlich","nonverbal","die Privatsphäre","die Öffentlichkeit","üblich","die Freundlichkeit","das Lächeln","missverständlich","peinlich","der Abstand","äußerst","bedenken"]
+    },
+    { id:"b2_kommunikation2", name:"Mehrsprachigkeit & Gehirn (Kap.2b)", emoji:"🧠",
+      words:["bilingual","zweisprachig","einsprachig","monolingual","das Gehirn","die Kompetenz","die Sprachentwicklung","die Sprachenpolitik","überfordern","unterfordern","die Startchance","die Konzentrationsleistung","nachweisen","die Phase","zweisprachig aufwachsen","vertraut machen","die Verhandlung führen","die Sprachkenntnisse","der Sprachschatz","der Sprachwissenschaftler","anlegen","auszahlen","geduldig","fehlerlos","feststellen"]
+    },
+    { id:"b2_kommunikation3", name:"Kritik & Konflikt (Kap.2c)", emoji:"💬",
+      words:["Kritik austeilen","Kritik einstecken","Kritik üben","konstruktiv","destruktiv","der Konsens","die Schwäche","der Spielraum","die Konfliktlösung","die Problemlösung","die Unstimmigkeit","auslösen","hinnehmen","hitzig","hinhören","bei der Sache bleiben","unter Druck stehen","die Aufgabenteilung","der Austausch","die Aussicht auf Erfolg","die Erziehungsfragen","das Resümee ziehen","der Vorwurf","tatsächlich","die Ich-Botschaft"]
+    },
+    { id:"b2_arbeit1",  name:"Stellensuche & Bewerbung (Kap.3a)", emoji:"📄",
+      words:["die Stellenanzeige","die Absage","die Berufserfahrung","das Bewerbungsschreiben","die Herausforderung","das Internetportal","frustriert","die Einschränkung","die Aufzählung","das Anschreiben","die Stellenausschreibung","der Bewerber","aussagekräftig","das Profil","die Kommunikationsstärke","das Aufgabengebiet","das Vorstellungsgespräch","zielorientiert","teamfähig","relevant","seriös","verhandlungssicher","übersichtlich","umfangreich","einbringen"]
+    },
+    { id:"b2_arbeit2",  name:"Arbeitszufriedenheit (Kap.3b)", emoji:"💼",
+      words:["anspruchsvoll","die Zufriedenheit","das Arbeitsumfeld","die Karriereplanung","überlastet","lukrativ","die Firmenkultur","der Herzenswunsch","kooperativ","demotivieren","die Dauer","bewältigen","beschäftigen","der Misserfolg","unverzichtbar","verlässlich","vernünftig","der Vorgesetzte","wirtschaftlich","die Finanzkrise","lästig","der Ausweg","fachlich","hauptsächlich","stattdessen"]
+    },
+    { id:"b2_arbeit3",  name:"Teamwork & Events (Kap.3c)", emoji:"🎯",
+      words:["der Teamgeist","zusammenarbeiten","die Teambildung","das Teamevent","die Absprache","die Koordination","die Projektleitung","das Management","die Organisation","die Durchführung","die Konzeption","die Kalkulation","die Nationalität","die Sprachkenntnisse","das Start-up","die Veranstaltungsagentur","verantworten","wirkungsvoll","die Kampagne","das Eventmanagement","budgetverantwortlich","umfangreich","das Anschreiben","erhoffen","die Entwicklungsperspektive"]
+    },
+    { id:"b2_zusammenleben1", name:"Jugend & Gesellschaft (Kap.4a)", emoji:"👥",
+      words:["die Chancengleichheit","der Migrationshintergrund","die Diskriminierung","die Lehrkraft","die Migrantenfamilie","das Migrantenkind","der Pate","die Einrichtung","ermöglichen","sinnvoll","der Zugewanderte","eingehen auf","völlig","farbenfroh","nachdenklich","scheitern","der Schulabschluss","infrage kommen","die Option","vollkommen","zerrissen","die Odyssee","ausbremsen","die Ausländerquote","die Hochschulreife"]
+    },
+    { id:"b2_zusammenleben2", name:"Armut & Soziales (Kap.4b)", emoji:"🤲",
+      words:["die Ausgrenzung","bedürftig","der Bedürftige","spenden","die Spende","die Spendenbereitschaft","die Notlage","die Lebenslage","langfristig","erstrebenswert","die Bildungschance","die Fördermaßnahme","die Grundlage","definieren","existieren","die Naturkatastrophe","die Epidemie","die Korruption","ausreichen","die Strategie","steigern","thematisieren","vorleben","vernichten","die Zuneigung"]
+    },
+    { id:"b2_zusammenleben3", name:"Sucht & Virtuelle Welten (Kap.4c)", emoji:"📱",
+      words:["die Sucht","die Suchtkrankheit","die Onlinesucht","die Computerspielsucht","virtuell","die Parallelwelt","versetzen","in Betracht kommen","enorm","unter Druck stehen","zugrunde liegen","die Parallelwelt","pauschalisieren","verallgemeinern","das Klischee","prinzipiell","abweichen","die Balance","bemerkenswert","gefährdet","der Kinderwunsch","der Lebensentwurf","die Vereinbarkeit","der Wertewandel","zeitintensiv"]
+    },
+    { id:"b2_wissenschaft1", name:"Naturwissenschaft & Forschung (Kap.5a)", emoji:"🔬",
+      words:["experimentieren","das Phänomen","die Naturwissenschaft","analytisch","die Forschungseinrichtung","konzipieren","qualifizieren","die Initiative","das Experiment","das Labor","die Ingenieurwissenschaft","die Nachwuchskraft","schrumpfen","verschärfen","überlebenswichtig","die Konzentration","außergewöhnlich","absolvieren","abbauen","heranführen","die Pädagogin","die Naturwissenschaft","mathematisch","das Phänomen","die Scheu abbauen"]
+    },
+    { id:"b2_wissenschaft2", name:"Lügen & Psyche (Kap.5b)", emoji:"🧬",
+      words:["lügen","die Täuschung","glaubwürdig","die Lügengeschichte","schwindeln","die Sympathie","die Nervenzelle","regulieren","verarbeiten","weit verbreitet","verfügen über","die Versuchsgruppe","die Versuchsperson","das Warnsignal","wünschenswert","ignorieren","intellektuell","kontinuierlich","kurzfristig","die Tendenz","übersehen","verschaffen","dermaßen","ertragen","erwecken"]
+    },
+    { id:"b2_wissenschaft3", name:"Atomkraft & Natur (Kap.5c)", emoji:"⚛️",
+      words:["die Atomenergie","das Atomkraftwerk","radioaktiv","das Plutonium","langlebig","die Prognose","überleben","vermehren","versinken","deprimierend","dramatisch","intakt","zurückerobern","die Spezies","die Grundwasser","die Notversorgung","der Zerfall","hinterlassen","bedroht","geschützt","die Schätzung","sichtbar","die Vision","die Struktur","der Überblick"]
+    },
+    { id:"b2_wissenschaft4", name:"Schlaf & Gesundheit (Kap.5d)", emoji:"😴",
+      words:["der Mittagsschlaf","ausschlafen","der Schlafmangel","die Schlafstörung","der Bluthochdruck","dauerhaft","der Herzinfarkt","hemmen","die Leistungsfähigkeit","rastlos","solide","tagsüber","ohnehin","die Lebenskunst","der Standpunkt vertreten","die Tatsache","betonen","abwägen","bewusst","der Kulturwandel","realisieren","umsetzen","einverstanden sein","der Schlafraum","die Ruhezeit"]
+    },
+    { id:"b2_fit1",     name:"Online-Shopping & Recht (Kap.6a)", emoji:"🛒",
+      words:["der Datenschutz","die Verschlüsselung","das Onlinebanking","das Passwort","die Firewall","der Virus","das Benutzerkonto","der Browser","die Suchmaschine","die Startseite","das Virenschutzprogramm","der Kreditkartenbetrug","die Reklamation","widerrufen","der Kaufvertrag","ausverkauft","beschädigen","erstatten","der Ersatz","das Versandrisiko","die Lieferzeit","die Wartezeit","die Zahlungsmöglichkeit","preiswert","die Produktbeschreibung"]
+    },
+    { id:"b2_fit2",     name:"Kommunikation am Arbeitsplatz (Kap.6b)", emoji:"📞",
+      words:["die Teamfähigkeit","die Kommunikationsfähigkeit","die Kritikfähigkeit","die Offenheit","die Höflichkeit","die Hilfsbereitschaft","die Wertschätzung","wohlwollend","würdigen","anerkennend","das Feedback","das Konfliktpotential","das Konzept","mitbestimmen","der Umgangston","klären","gestalten","entgegenbringen","bewirken","reden über","vielmehr","vortragen","freundschaftlich","gleichberechtigt","anfühlen"]
+    },
+    { id:"b2_fit3",     name:"Prüfungen & Lernen (Kap.6c)", emoji:"📋",
+      words:["die Prüfungsangst","der Lernstoff","einprägen","einteilen","die Lernphase","die Gesamtwiederholung","die Musterklausur","der Zeitplan","der Puffertag","schlimmstenfalls","rechtzeitig","klarmachen","konstant halten","nachhaken","verunsichern","widmen","verbreiten","meiden","die Mühe geben","die Nervosität","die Korrektur","unlesbar","eingrenzen","anstehen","der Bammel"]
+    },
+    { id:"b2_kulturwelten1", name:"Weltkulturerbe (Kap.7a)", emoji:"🏛️",
+      words:["das Weltkulturerbe","das Kulturdenkmal","das Welterbe","schützenswert","besichtigen","die Schlossanlage","die Anlage","weltbekannt","entstehen","die Schlossbesichtigung","der Audioguide","kaiserlich","das Hofzeremoniell","reformieren","die Schulpflicht","die Staatsgeschäfte","prominent","die Regierungszeit","der Thron","imposant","lesefreundlich","das Synonym","aufeinander beziehen","der Textzusammenhang","das Kulturdenkmal"]
+    },
+    { id:"b2_kulturwelten2", name:"Kunstraub & Krimis (Kap.7b)", emoji:"🎨",
+      words:["der Kunstraub","das Gemälde","der Einbruch","expressionistisch","erpressen","die Erpressung","das Lösegeld","gestehen","der Komplize","der Verdächtige","fassen","filmreif","glaubhaft","andeuten","erwähnen","vermitteln","ausrauben","entführen","der Goldbarren","das Juweliergeschäft","der Detektiv","die Aufklärung","der Hinweis","verdächtigen","die Gänsehaut"]
+    },
+    { id:"b2_kulturwelten3", name:"Sprachen & Literatur (Kap.7c)", emoji:"📚",
+      words:["aussterben","der Dialekt","die Lektüre","skeptisch","die Überlegung","die Malerei","annehmen","anpassen","der Bedeutungsverlust","der Einfluss","aussterben","die Evolution","der Klang","lebendig","die Menschheit","der Muttersprachler","der Organismus","das Sprachensterben","verdrängen","vererben","die Verbreitung","überwiegend","der Vormarsch","übersetzbar","wiedererkennen"]
+    },
+    { id:"b2_geschichte1", name:"Geschichte: Mauer & DDR (Kap.8a)", emoji:"🧱",
+      words:["die Wiedervereinigung","die Teilung","der Mauerfall","die Besatzungszone","errichten","überwinden","die Grenzkontrolle","der Grenzsoldat","abriegeln","abgrenzen","die Absperrung","das Grenzgebiet","endgültig","die Bewachung","perfektionieren","überwachen","ungehindert","rücksichtslos","komfortabel","der Wachturm","der Zaun","zumauern","der Hinterhof","auseinanderreißen","die Verabschiedung"]
+    },
+    { id:"b2_geschichte2", name:"Geschichte: Politik & Ereignisse (Kap.8b)", emoji:"🏛️",
+      words:["die Revolution","die Neutralität","die Koalition","der Nationalfeiertag","die Bundestagswahl","die Bundestagsfraktion","der Bundeskanzler","die Gründung","die Hilfsorganisation","initiieren","die Protestaktion","die Sensation","immerwährend","der Machtwechsel","gesetzlich","der Staatsfeiertag","die Republik","distanzieren","ausgezeichnet","die Beteiligung","entlassen","die Fachwelt","die Recherche","ereignen","der Lexikonartikel"]
+    },
+    { id:"b2_gefuehl1",  name:"Musik & Gedächtnis (Kap.9a)", emoji:"🎵",
+      words:["melancholisch","die Demenz","das Gedächtnis","schmerzlindernd","die Sprachstörung","reaktivieren","das Befinden","chronisch","der Blutdruck","die Herzfrequenz","der Schlaganfall","der Sauerstoffverbrauch","der Stoffwechsel","steuern","senken","gesundheitsfördernd","beruhigend","wohltuend","der Takt","der Ton","der Pulsschlag","die Wahrnehmung","die Erkenntnis","die Gehirnregion","die Gehirnaktivität"]
+    },
+    { id:"b2_gefuehl2",  name:"Farben & Emotionen (Kap.9b)", emoji:"🌈",
+      words:["der Pessimismus","die Trauer","die Verzweiflung","die Reinheit","sich schwarz ärgern","das Blaue vom Himmel versprechen","eine weiße Weste haben","depressiv","die Empörung","der Befehl","die Ermunterung","abschwächen","der Kontext","gemein","witzig","nichtssagend","verwunderlich","ratsam","ernst meinen","lexikalisch","die Naturerscheinung","die Zeiterscheinung","donnern","eilig","gründlich"]
+    },
+    { id:"b2_gefuehl3",  name:"Entscheidungen & Vernunft (Kap.9c)", emoji:"🧠",
+      words:["die Entscheidung","das Gewissen","investieren","pessimistisch","das Dilemma","fällen","einholen","limitiert","selbstsicher","das Selbstbewusstsein","das Urteilsvermögen","Gefahr laufen","Schmetterlinge im Bauch","einen Stein im Magen haben","das Schnäppchen","die Routine","der Jobwechsel","die Wochenendbeziehung","die Eigeninitiative","vorausdenken","die Angstreaktion","die Notwendigkeit","der Gedankenschritt","strukturiert","ausfallen"]
+    },
+    { id:"b2_zukunft1",  name:"Roboter & KI (Kap.10a)", emoji:"🤖",
+      words:["die Digitalisierung","die Technologie","interagieren","die Empathie","eigenständig","wegfallen","ausführen","der Robotertyp","der Technikkonzern","die Reaktionszeit","die Überzeugungskraft","das Verhandlungsgeschick","vermehrt","die Einsatzmöglichkeit","der Defekt","auf den Markt kommen","die Branche","einleuchtend","aufwärmen","ausräumen","einräumen","der Notruf","das Menschenleben","der Mitschüler","die Haupthandlung"]
+    },
+    { id:"b2_zukunft2",  name:"Digitale Medizin (Kap.10b)", emoji:"💊",
+      words:["diagnostizieren","optimieren","die Telemedizin","die Innovation","die App","checken","die Digitalisierung","hinterherhinken","vermessen","die Körperdaten","der Chip","die Kontaktlinse","die Krankenakte","die Krankenkasse","der Lichtsensor","die Tränenflüssigkeit","rasant","umstritten","das Verfahren","lindern","simpel","sträuben","der Sauerstoff","einpflanzen","auswerten"]
+    },
+    { id:"b2_zukunft3",  name:"Zukunft der Arbeit (Kap.10c)", emoji:"🚀",
+      words:["zukunftssicher","die Berufswelt","infolge","die Nachfrage","zugänglich","der Berufsanfänger","die Wissensbeschaffung","das Ausbildungsangebot","der Wissensmanager","das Internetmanagement","die Informationsbeschaffung","die Kommunikationsmöglichkeit","weiterhin","der Berufswunsch","der IT-Bereich","die Berufsausbildung","das Arbeitsgebiet","vorhersagen","rosig","abbrechen","zukommen lassen","die Zukunftsvision","kostengünstig","energiesparend","die Wohnform"]
+    },
+  ],  C1: [
+    { id:"c1_argumentation", name:"Argumentation & Rhetorik", emoji:"🎙️",
+      words:["die Rhetorik","überzeugen","widerlegen","die Schlussfolgerung","das Argument","die These","die Antithese","die Synthese","bekräftigen","relativieren","einräumen","das Gegenargument","stichhaltig","plausibel","nachvollziehbar","die Prämisse","die Konklusion","herleiten","folgern","anführen","untermauern","differenzieren","nuancieren","pointieren","die Überzeugungskraft"]
+    },
+    { id:"c1_akademisch",  name:"Akademische Sprache", emoji:"📜",
+      words:["analysieren","synthetisieren","evaluieren","die Methodik","die Empirie","das Konzept","die Hypothese","verifizieren","falsifizieren","die Theorie","der Ansatz","das Paradigma","interdisziplinär","die Forschungsfrage","das Fazit","die Schlussfolgerung","die Erkenntnis","belegen","zitieren","paraphrasieren","der Diskurs","rezipieren","das Postulat","die Prämisse","reflektieren"]
+    },
+    { id:"c1_gesellschaft1", name:"Gesellschaft & Wandel", emoji:"🌐",
+      words:["der gesellschaftliche Wandel","die Transformation","das Phänomen","die Polarisierung","die Fragmentierung","die Kohäsion","der Individualismus","der Kollektivismus","die Solidarität","die Inklusion","die Exklusion","marginalisieren","die Chancengleichheit","die soziale Mobilität","der Generationenkonflikt","der demographische Wandel","die Überalterung","die Urbanisierung","die Suburbanisierung","die Segregation","die Gentrification","der soziale Aufstieg","die Chancenungerechtigkeit","strukturell","systemisch"]
+    },
+    { id:"c1_gesellschaft2", name:"Werte & Normen", emoji:"⚖️",
+      words:["die Ethik","die Moral","die Norm","der Wert","das Gewissen","die Integrität","die Authentizität","die Verantwortung","die Pflicht","das Recht","die Würde","die Autonomie","paternalistisch","libertär","konservativ","progressiv","die Weltanschauung","das Leitbild","die Leitkultur","pluralistisch","tolerant","die Kompromissbereitschaft","die Konfliktkultur","der Konsens","die Legitimität"]
+    },
+    { id:"c1_politik1",   name:"Politik & Demokratie", emoji:"🏛️",
+      words:["die Gewaltenteilung","die Legislative","die Exekutive","die Judikative","der Rechtsstaat","die Verfassung","das Grundgesetz","die Meinungsfreiheit","die Pressefreiheit","die Versammlungsfreiheit","das Wahlrecht","die Volkssouveränität","der Lobbyismus","die Transparenz","die Korruptionsbekämpfung","die Zivilgesellschaft","die Nichtregierungsorganisation","der Populismus","der Extremismus","die Radikalisierung","der Nationalismus","die Globalisierung","die supranationale Organisation","der multilaterale Ansatz","die Diplomatie"]
+    },
+    { id:"c1_politik2",   name:"Internationale Beziehungen", emoji:"🌍",
+      words:["die Außenpolitik","die Diplomatie","das Völkerrecht","der Multilateralismus","die Geopolitik","die Sanktion","das Embargo","der Konflikt","die Mediation","der Waffenstillstand","die Souveränität","die territoriale Integrität","die humanitäre Hilfe","die Entwicklungszusammenarbeit","die Migration","die Flucht","das Asylrecht","die Integration","die Globalisierungskritik","der Protektionismus","der Freihandel","das Handelsabkommen","die Währungsunion","die wirtschaftliche Interdependenz","die geopolitische Verschiebung"]
+    },
+    { id:"c1_wirtschaft1", name:"Wirtschaft & Finanzen", emoji:"📈",
+      words:["die Konjunktur","die Rezession","die Inflation","die Deflation","das Bruttoinlandsprodukt","die Staatsverschuldung","die Haushaltspolitik","die Fiskalpolitik","die Geldpolitik","der Leitzins","die Notenbank","das Quantitative Easing","die Vermögensungleichheit","die Umverteilung","die Steuerprogression","die Einkommenssteuer","die Mehrwertsteuer","die Kapitalertragsteuer","der Steuerwettbewerb","die Steueroase","die Finanzkrise","die Systemrelevanz","die Regulierung","das Risikomanagement","die Diversifikation"]
+    },
+    { id:"c1_wirtschaft2", name:"Arbeit & Digitalisierung", emoji:"🤖",
+      words:["die Automatisierung","die Digitalisierung","die künstliche Intelligenz","der Algorithmus","die Disruption","das Geschäftsmodell","die Plattformökonomie","die Sharing Economy","die Gig Economy","das Prekariat","die Flexibilisierung","die Deregulierung","das bedingungslose Grundeinkommen","der Strukturwandel","die Qualifizierung","die Umschulung","die lebenslanges Lernen","die Wissensgesellschaft","die Innovationskultur","das Start-up-Ökosystem","der Risikokapitalgeber","die Skalierbarkeit","das Netzwerkeffekt","die Datenwirtschaft","die Plattformdominanz"]
+    },
+    { id:"c1_umwelt1",    name:"Umwelt & Nachhaltigkeit", emoji:"🌿",
+      words:["die Nachhaltigkeit","die Klimaneutralität","der CO2-Fußabdruck","die Dekarbonisierung","die Energiewende","die erneuerbaren Energien","die Photovoltaik","die Windkraft","die Wasserkraft","die Geothermie","der Energiespeicher","das Smart Grid","die Elektromobilität","die Kreislaufwirtschaft","der ökologische Fußabdruck","die Biodiversität","das Artensterben","der Lebensraumverlust","die Renaturierung","der Klimaschutz","die Klimaanpassung","das Pariser Abkommen","die CO2-Steuer","der Emissionshandel","die Greenwashing"]
+    },
+    { id:"c1_umwelt2",    name:"Wissenschaft & Technik", emoji:"🔭",
+      words:["die Spitzenforschung","der Durchbruch","die Grundlagenforschung","die angewandte Forschung","das Patent","die Innovation","der Technologietransfer","die Forschungsförderung","das Peer-Review","die Replikationskrise","der Forschungsbetrug","die Wissenschaftsethik","die Bioinformatik","die Genomforschung","die CRISPR-Technologie","die Stammzellenforschung","die Nanotechnologie","die Quantencomputer","das maschinelle Lernen","das neuronale Netz","die Datenwissenschaft","Big Data","der Datenschutz","die Cybersicherheit","die digitale Infrastruktur"]
+    },
+    { id:"c1_sprache1",   name:"Sprache & Linguistik", emoji:"🔤",
+      words:["die Pragmatik","die Semantik","die Syntax","die Morphologie","die Phonologie","die Sociolinguistik","die Psycholinguistik","die Kognitionslinguistik","der Spracherwerb","die Mehrsprachigkeit","die Interferenz","der Sprachwandel","die Etymologie","die Konnotation","die Denotation","die Metapher","die Ironie","die Mehrdeutigkeit","das Implikat","die Sprechhandlung","der Illokution","die Perlokution","die Deixis","die Anapher","die Kohärenz"]
+    },
+    { id:"c1_sprache2",   name:"Literatur & Textanalyse", emoji:"📖",
+      words:["die Erzählperspektive","der Erzähler","der Protagonist","der Antagonist","die Dramaturgie","der Konflikt","die Katharsis","die Epik","die Lyrik","die Dramatik","der Stilmittel","die Metapher","die Allegorie","die Ironie","die Satire","die Parodie","die Intertextualität","die Rezeption","der Kanon","die literarische Strömung","die Epoche","die Romantik","die Aufklärung","der Expressionismus","die Postmoderne"]
+    },
+    { id:"c1_psychologie", name:"Psychologie & Kognition", emoji:"🧠",
+      words:["die Kognition","die Wahrnehmung","das Gedächtnis","die Aufmerksamkeit","die Exekutivfunktion","die Metakognition","die Empathie","die emotionale Intelligenz","der Bias","der kognitive Fehler","die Heuristik","die Entscheidungsfindung","der Priming-Effekt","der Bestätigungsfehler","die Dissonanz","die Resilienz","die Copingstrategie","die Psychotherapie","die kognitive Verhaltenstherapie","die Achtsamkeit","das Stressmanagement","die Burnout-Prävention","die positive Psychologie","das Flow-Erlebnis","die intrinsische Motivation"]
+    },
+    { id:"c1_kultur1",    name:"Kulturwissenschaft & Identität", emoji:"🎭",
+      words:["die kulturelle Identität","die Hybridität","die Transkulturalität","die Akkulturation","die Assimilation","die Leitkultur","die Minderheitskultur","das kulturelle Gedächtnis","das kollektive Gedächtnis","die Erinnerungskultur","das Erbe","die Tradition","die kulturelle Aneignung","die Repräsentation","der Diskurs","die Hegmonie","die Subkultur","die Gegenkultur","die Popkultur","der Zeitgeist","die kulturelle Produktion","die kreative Industrie","das Kulturkapital","die Bildungsbürgerlichkeit","die kulturelle Teilhabe"]
+    },
+    { id:"c1_kultur2",    name:"Medien & Öffentlichkeit", emoji:"📡",
+      words:["die Öffentlichkeit","die veröffentlichte Meinung","die öffentliche Meinung","die Agenda-Setting","die Framing","die Spin-Doctoring","die Medienkonzentration","die Algorithmusblase","die Echokammer","die Desinformation","die Propaganda","die Medienkompetenz","die Informationskompetenz","das investigative Journalismus","die Pressefreiheit","die Zensur","der Whistleblower","die Transparenz","die Rechenschaftspflicht","die Plattformverantwortung","die Content-Moderation","die Hassrede","die digitale Öffentlichkeit","die Netzpolitik","die Regulierung"]
+    },
+    { id:"c1_philosophie", name:"Philosophie & Ethik", emoji:"💡",
+      words:["die Ontologie","die Epistemologie","die Phänomenologie","die Hermeneutik","die Dialektik","die Utilitarismus","der Kantianismus","der Kontraktualismus","die Tugendethik","die Diskursethik","das Gedankenexperiment","die Aporie","die Kontingenz","die Determinismus","der Freie Wille","das Kausalität","die Transzendenz","die Immanenz","die Subjektivität","die Intersubjektivität","die Entfremdung","die Authentizität","die Existenz","das Absurde","die Sinnfrage"]
+    },
+  ]
+};
+
+// ─── Auto-paginate: split each topic into pages of PAGE_SIZE ───
+const TOPICS = {};
+for(const [level, topicList] of Object.entries(TOPICS_RAW)){
+  TOPICS[level] = [];
+  for(const topic of topicList){
+    const words = topic.words;
+    const pages = Math.ceil(words.length / PAGE_SIZE);
+    if(pages <= 1){
+      TOPICS[level].push({ ...topic });
+    } else {
+      for(let p = 0; p < pages; p++){
+        const slice = words.slice(p * PAGE_SIZE, (p+1) * PAGE_SIZE);
+        TOPICS[level].push({
+          id: topic.id + '_p' + (p+1),
+          name: topic.name,
+          emoji: topic.emoji,
+          page: p+1,
+          totalPages: pages,
+          words: slice
+        });
+      }
+    }
+  }
+}
+
+// ════════════════════════════════════════════
+//  SRS ENGINE (localStorage-based)
+// ════════════════════════════════════════════
+const SRS_INTERVALS = [1,3,7,14,30]; // days
+
+function srsGet(word){ try{ const d = localStorage.getItem('srs_'+word); return d ? JSON.parse(d) : null; } catch(e){ return null; } }
+function srsSet(word, data){ try{ localStorage.setItem('srs_'+word, JSON.stringify(data)); } catch(e){} }
+
+function srsReview(word, known){
+  const now = Date.now();
+  let d = srsGet(word) || { interval:0, due:now, reviews:0 };
+  if(known){
+    d.interval = Math.min(d.interval + 1, SRS_INTERVALS.length - 1);
+    d.due = now + SRS_INTERVALS[d.interval] * 86400000;
+  } else {
+    d.interval = 0;
+    d.due = now + 86400000; // tomorrow
+  }
+  d.reviews++;
+  srsSet(word, d);
+}
+
+function srsDueWords(){
+  const now = Date.now();
+  const due = [];
+  try {
+    for(let i=0; i<localStorage.length; i++){
+      const key = localStorage.key(i);
+      if(!key.startsWith('srs_')) continue;
+      const d = JSON.parse(localStorage.getItem(key));
+      if(d && d.due <= now) due.push(key.slice(4));
+    }
+  } catch(e){}
+  return due;
+}
+
+function updateSrsBanner(){
+  const due = srsDueWords();
+  const banner = document.getElementById('srs-banner');
+  document.getElementById('srs-due-count').textContent = due.length;
+  banner.style.display = due.length > 0 ? 'flex' : 'none';
+}
+
+// ════════════════════════════════════════════
+//  APP STATE
+// ════════════════════════════════════════════
+let cards = [];
+let currentIndex = 0;
+let isFlipped = false;
+let knownWords = new Set();
+let repeatWords = new Set();
+let currentDeckTitle = '';
+let currentTopicId = null;
+let activeLevel = 'A1';
+let srsMode = false;
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+document.querySelectorAll('.level-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.level-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeLevel = btn.dataset.level;
+    buildTopics();
+  });
+});
+
+function buildTopics(){
+  const grid = document.getElementById('topics-grid');
+  const list = TOPICS[activeLevel] || [];
+  grid.innerHTML = list.map(t => {
+    const pageInfo = t.totalPages > 1 ? `<br><span style="font-size:10px;opacity:.6">стр. ${t.page} из ${t.totalPages}</span>` : '';
+    return `
+    <div class="topic-card" onclick="loadTopic('${t.id}')">
+      <div class="tc-emoji">${t.emoji}</div>
+      <div class="tc-name">${t.name}${pageInfo}</div>
+      <div class="tc-meta">${t.words.length} слов</div>
+    </div>`;
+  }).join('');
+}
+
+function showScreen(name){
+  ['home-screen','loading-screen','cards-screen','finish-screen','srs-screen']
+    .forEach(id => document.getElementById(id).style.display='none');
+  document.getElementById(name).style.display='block';
+}
+
+// ════════════════════════════════════════════
+//  GENERATE
+// ════════════════════════════════════════════
+async function loadTopic(topicId){
+  const all = Object.values(TOPICS).flat();
+  const t = all.find(x => x.id === topicId);
+  if(!t) return;
+  const pageInfo = t.totalPages > 1 ? ` (${t.page}/${t.totalPages})` : '';
+  currentDeckTitle = t.emoji + ' ' + t.name + pageInfo;
+  currentTopicId = topicId;
+  srsMode = false;
+  await generateCards(t.words, currentDeckTitle, activeLevel);
+}
+
+async function generateCustom(){
+  const raw = document.getElementById('words-input').value.trim();
+  if(!raw){ showError('Введи хотя бы одно слово!'); return; }
+  const words = raw.split(/[\n,;]+/).map(w=>w.trim()).filter(Boolean).slice(0,20);
+  if(!words.length){ showError('Не удалось распознать слова.'); return; }
+  document.getElementById('error-msg').style.display='none';
+  currentDeckTitle = '✦ Свои слова';
+  currentTopicId = null;
+  srsMode = false;
+  await generateCards(words, 'Свои слова', activeLevel);
+}
+
+async function startSrsReview(){
+  const due = srsDueWords().slice(0,20);
+  if(!due.length){ showScreen('srs-screen'); return; }
+  currentDeckTitle = '🔁 Повторение (SRS)';
+  srsMode = true;
+  await generateCards(due, 'Повторение', activeLevel);
+}
+
+async function generateCards(wordList, deckName, level){
+  document.getElementById('gen-btn').disabled = true;
+  document.getElementById('loading-title').textContent = `Генерируем ${wordList.length} карточек...`;
+  showScreen('loading-screen');
+
+  // Split into batches of 10 to avoid token overflow
+  const BATCH = 10;
+  const batches = [];
+  for(let i = 0; i < wordList.length; i += BATCH){
+    batches.push(wordList.slice(i, i + BATCH));
+  }
+
+  const allCards = [];
+
+  for(let b = 0; b < batches.length; b++){
+    const batch = batches[b];
+    document.getElementById('loading-title').textContent =
+      `Генерируем... (${Math.min((b+1)*BATCH, wordList.length)}/${wordList.length})`;
+
+    const prompt = `Создай карточки для изучения немецких слов и выражений (уровень ${level}).
+Список слов/фраз: ${batch.join(' | ')}
+
+Верни ТОЛЬКО JSON-массив. Никакого текста до или после. Никаких markdown-блоков.
+Каждый объект:
+{"word":"СЛОВО/ФРАЗА точно как в списке","article":"der/die/das или пусто","plural":false,"translation":"ПЕРЕВОД НА РУССКИЙ 1-5 слов","example_de":"предложение где ключевое слово обёрнуто в **звёздочки**","example_ru":"ПЕРЕВОД ПРЕДЛОЖЕНИЯ","emoji":"ОДИН ЭМОДЗИ"}
+
+Обязательно:
+- translation ВСЕГДА заполнено (для фраз переводи всю фразу)
+- example_de и example_ru ВСЕГДА заполнены
+- article: der/die/das только для существительных; для глаголов/прилагательных/фраз оставь пустым
+- plural: true только для слов исключительно во мн.ч. (Eltern, Geschwister, Möbel и т.п.)
+- Каждое слово из списка должно быть в массиве`;
+
+    let success = false;
+    for(let attempt = 0; attempt < 3; attempt++){
+      try {
+        const resp = await fetch("https://api.anthropic.com/v1/messages", {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({
+            model:"claude-sonnet-4-20250514",
+            max_tokens: 2048,
+            messages:[{role:"user", content: prompt}]
+          })
+        });
+        const data = await resp.json();
+        if(data.error) throw new Error(data.error.message || 'API error');
+        const text = (data.content||[]).map(b=>b.text||'').join('').trim();
+        // Strip any markdown fences
+        const clean = text.replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,'').trim();
+        const parsed = JSON.parse(clean);
+        if(!Array.isArray(parsed) || !parsed.length) throw new Error('empty array');
+        allCards.push(...parsed);
+        success = true;
+        break;
+      } catch(e){
+        console.warn(`Batch ${b+1} attempt ${attempt+1} failed:`, e.message);
+        if(attempt < 2) await new Promise(r => setTimeout(r, 800));
+      }
+    }
+
+    if(!success){
+      // Fallback: add stub cards for this batch so we don't lose them
+      for(const w of batch){
+        allCards.push({word: w, article:'', plural:false, translation:'—', example_de:`**${w}**`, example_ru:'', emoji:'📖'});
+      }
+    }
+  }
+
+  if(!allCards.length){
+    showScreen('home-screen');
+    showError('Не удалось сгенерировать карточки. Попробуй снова.');
+    document.getElementById('gen-btn').disabled = false;
+    return;
+  }
+
+  cards = allCards;
+  knownWords = new Set();
+  repeatWords = new Set();
+  currentIndex = 0;
+  isFlipped = false;
+  document.getElementById('deck-title').textContent = deckName;
+  renderDots();
+  updateStats();
+  loadCard(0);
+  showScreen('cards-screen');
+  document.getElementById('gen-btn').disabled = false;
+}
+
+function showError(msg){
+  const el = document.getElementById('error-msg');
+  el.textContent=msg; el.style.display='block';
+}
+
+// ════════════════════════════════════════════
+//  CARD RENDERING
+// ════════════════════════════════════════════
+function getGenderClass(article, isPlural){
+  if(isPlural) return 'none'; // plural = no gender color
+  if(article==='der') return 'masc';
+  if(article==='die') return 'fem';
+  if(article==='das') return 'neut';
+  return 'none';
+}
+
+function loadCard(idx){
+  if(idx < 0 || idx >= cards.length) return;
+  const c = cards[idx];
+  const gc = getGenderClass(c.article, c.plural === true);
+
+  // unflip
+  isFlipped = false;
+  document.getElementById('card-inner').classList.remove('flipped');
+  document.getElementById('flip-btn').textContent = '↻ Показать';
+
+  // front
+  const front = document.getElementById('card-front');
+  front.className = 'card-face card-front gender-' + gc;
+  document.getElementById('card-emoji').textContent = c.emoji || '📖';
+  document.getElementById('level-badge').textContent = c.level || activeLevel;
+
+  const gbEl = document.getElementById('gender-badge');
+  if(c.article && !c.plural){
+    gbEl.textContent = c.article;
+    gbEl.className = 'gender-badge badge-' + c.article;
+    gbEl.style.display = '';
+  } else if(c.plural){
+    gbEl.textContent = 'Pl.';
+    gbEl.className = 'gender-badge badge-none';
+    gbEl.style.display = '';
+  } else {
+    gbEl.style.display = 'none';
+  }
+  document.getElementById('card-word').textContent = c.word;
+
+  // back
+  const back = document.getElementById('card-back');
+  back.className = 'card-face card-back gender-' + gc;
+
+  const artEl = document.getElementById('back-article');
+  if(c.plural){
+    artEl.textContent = 'Plural';
+    artEl.className = 'back-article';
+    artEl.style.color = 'var(--text-dim)';
+  } else {
+    artEl.textContent = c.article ? 'Artikel: ' + c.article : '';
+    artEl.className = 'back-article art-' + (c.article || 'none');
+    artEl.style.color = '';
+  }
+
+  const bwEl = document.getElementById('back-word');
+  bwEl.textContent = c.word;
+  bwEl.className = 'back-word col-' + gc;
+
+  document.getElementById('back-translation').textContent = c.translation;
+
+  const exEl = document.getElementById('back-example');
+  exEl.className = 'back-example border-' + gc;
+  document.getElementById('back-ex-de').innerHTML = (c.example_de||'').replace(/\*\*(.+?)\*\*/g,'<em>$1</em>');
+  document.getElementById('back-ex-ru').textContent = c.example_ru || '';
+
+  // progress
+  const total = cards.length;
+  document.getElementById('card-counter').textContent = idx+1;
+  document.getElementById('card-total').textContent = total;
+  document.getElementById('progress-fill').style.width = ((idx+1)/total*100)+'%';
+
+  // dots
+  document.querySelectorAll('.dot').forEach((el,i) => {
+    el.classList.remove('current','known','repeat');
+    if(i===idx) el.classList.add('current');
+    else if(knownWords.has(i)) el.classList.add('known');
+    else if(repeatWords.has(i)) el.classList.add('repeat');
+  });
+
+  currentIndex = idx;
+  updateStats();
+}
+
+function renderDots(){
+  document.getElementById('deck-dots').innerHTML = cards
+    .map((_,i)=>`<div class="dot" onclick="loadCard(${i})">${i+1}</div>`)
+    .join('');
+}
+
+function updateStats(){
+  document.getElementById('stat-known').textContent = knownWords.size;
+  document.getElementById('stat-repeat').textContent = repeatWords.size;
+  const remaining = cards.length - knownWords.size - repeatWords.size;
+  document.getElementById('stat-left').textContent = Math.max(0,remaining);
+}
+
+// ════════════════════════════════════════════
+//  FLIP
+// ════════════════════════════════════════════
+function flipCard(){
+  isFlipped = !isFlipped;
+  document.getElementById('card-inner').classList.toggle('flipped', isFlipped);
+  document.getElementById('flip-btn').textContent = isFlipped ? '↺ Скрыть' : '↻ Показать';
+}
+
+// ════════════════════════════════════════════
+//  SWIPE LOGIC
+// ════════════════════════════════════════════
+function swipeCard(dir){
+  const known = dir === 'right';
+  const word = cards[currentIndex]?.word || '';
+
+  // SRS update
+  srsReview(word, known);
+
+  // Topic progress update
+  if(currentTopicId) markTopicWord(currentTopicId, word, known);
+
+  if(known){ knownWords.add(currentIndex); repeatWords.delete(currentIndex); }
+  else { repeatWords.add(currentIndex); knownWords.delete(currentIndex); }
+
+  // animate out
+  const cont = document.getElementById('card-container');
+  cont.classList.add('animating');
+  const tx = dir === 'right' ? '120%' : '-120%';
+  cont.style.transform = `translateX(${tx}) rotate(${dir==='right'?'15deg':'-15deg'})`;
+  cont.style.opacity = '0';
+
+  setTimeout(() => {
+    cont.style.transform = '';
+    cont.style.opacity = '1';
+    cont.classList.remove('animating');
+    document.getElementById('swipe-overlay').className = 'swipe-overlay';
+
+    // find next unreviewed or finish
+    const next = findNextCard();
+    if(next === -1){
+      showFinish();
+    } else {
+      loadCard(next);
+    }
+  }, 380);
+}
+
+function findNextCard(){
+  // next card that isn't decided yet
+  for(let i = currentIndex+1; i < cards.length; i++){
+    if(!knownWords.has(i) && !repeatWords.has(i)) return i;
+  }
+  // wrap from beginning
+  for(let i = 0; i < currentIndex; i++){
+    if(!knownWords.has(i) && !repeatWords.has(i)) return i;
+  }
+  // all done
+  if(knownWords.size + repeatWords.size >= cards.length) return -1;
+  return currentIndex+1 < cards.length ? currentIndex+1 : -1;
+}
+
+function showFinish(){
+  const total = cards.length;
+  const known = knownWords.size;
+  const repeat = repeatWords.size;
+  const pct = Math.round(known/total*100);
+
+  document.getElementById('finish-emoji').textContent = pct >= 80 ? '🎉' : pct >= 50 ? '👍' : '💪';
+  document.getElementById('finish-title').textContent = pct >= 80 ? 'Отлично!' : pct >= 50 ? 'Хорошо!' : 'Продолжай!';
+  document.getElementById('finish-text').textContent = `Колода завершена! ${pct}% слов запомнено.`;
+
+  document.getElementById('finish-stats').innerHTML = `
+    <div class="stat-chip green" style="flex:0 0 auto;min-width:100px"><div class="stat-val">${known}</div><div class="stat-label">Знаю</div></div>
+    <div class="stat-chip red" style="flex:0 0 auto;min-width:100px"><div class="stat-val">${repeat}</div><div class="stat-label">Повторить</div></div>
+  `;
+  showScreen('finish-screen');
+  updateSrsBanner();
+}
+
+// ════════════════════════════════════════════
+//  TOUCH / MOUSE SWIPE
+// ════════════════════════════════════════════
+let dragStart = null;
+let dragging = false;
+let dragX = 0;
+
+const stage = document.getElementById('card-stage');
+const cont = document.getElementById('card-container');
+const overlay = document.getElementById('swipe-overlay');
+
+function onPointerDown(e){
+  if(document.getElementById('cards-screen').style.display === 'none') return;
+  const x = e.touches ? e.touches[0].clientX : e.clientX;
+  const y = e.touches ? e.touches[0].clientY : e.clientY;
+  dragStart = {x, y};
+  dragging = false;
+  dragX = 0;
+}
+
+function onPointerMove(e){
+  if(!dragStart) return;
+  const x = e.touches ? e.touches[0].clientX : e.clientX;
+  const y = e.touches ? e.touches[0].clientY : e.clientY;
+  const dx = x - dragStart.x;
+  const dy = y - dragStart.y;
+  if(!dragging && Math.abs(dx) > 8) dragging = true;
+  if(!dragging) return;
+  if(e.cancelable) e.preventDefault();
+
+  dragX = dx;
+  const rot = dx * 0.06;
+  cont.style.transform = `translateX(${dx}px) rotate(${rot}deg)`;
+
+  overlay.className = 'swipe-overlay';
+  if(dx > 50){ overlay.classList.add('show-right'); overlay.textContent = '✓'; }
+  else if(dx < -50){ overlay.classList.add('show-left'); overlay.textContent = '✗'; }
+
+  // hint highlight
+  document.getElementById('hint-left').classList.toggle('active', dx < -30);
+  document.getElementById('hint-right').classList.toggle('active', dx > 30);
+}
+
+function onPointerUp(e){
+  if(!dragStart) return;
+  if(!dragging){
+    // tap = flip
+    dragStart = null;
+    flipCard();
+    return;
+  }
+  dragStart = null;
+  dragging = false;
+  document.getElementById('hint-left').classList.remove('active');
+  document.getElementById('hint-right').classList.remove('active');
+  overlay.className = 'swipe-overlay';
+
+  if(dragX > 80) swipeCard('right');
+  else if(dragX < -80) swipeCard('left');
+  else {
+    cont.classList.add('animating');
+    cont.style.transform = '';
+    setTimeout(()=>cont.classList.remove('animating'), 400);
+  }
+}
+
+stage.addEventListener('mousedown', onPointerDown);
+window.addEventListener('mousemove', onPointerMove);
+window.addEventListener('mouseup', onPointerUp);
+stage.addEventListener('touchstart', onPointerDown, {passive:false});
+stage.addEventListener('touchmove', onPointerMove, {passive:false});
+stage.addEventListener('touchend', onPointerUp);
+
+// ════════════════════════════════════════════
+//  KEYBOARD
+// ════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if(document.getElementById('cards-screen').style.display==='none') return;
+  if(e.key==='ArrowRight') swipeCard('right');
+  if(e.key==='ArrowLeft') swipeCard('left');
+  if(e.key===' '){ e.preventDefault(); flipCard(); }
+});
+
+// ════════════════════════════════════════════
+//  NAV
+// ════════════════════════════════════════════
+function restartDeck(){
+  knownWords = new Set();
+  repeatWords = new Set();
+  loadCard(0);
+  renderDots();
+  showScreen('cards-screen');
+}
+
+function goHome(){
+  showScreen('home-screen');
+  document.getElementById('gen-btn').disabled = false;
+  updateSrsBanner();
+}
+
+// ════════════════════════════════════════════
+//  PROFILE SYSTEM
+// ════════════════════════════════════════════
+const AVATARS = ['🧑','👩','👨','🧒','👧','👦','🧑‍🎓','👩‍🎓','👨‍🎓','🦊','🐼','🐨'];
+let currentProfile = null; // { id, name, avatar }
+
+function profileKey(profileId, key){ return `p_${profileId}_${key}`; }
+
+function getAllProfiles(){
+  try {
+    return JSON.parse(localStorage.getItem('wk_profiles') || '[]');
+  } catch(e){ return []; }
+}
+
+function saveProfiles(list){
+  try { localStorage.setItem('wk_profiles', JSON.stringify(list)); } catch(e){}
+}
+
+function getProfileData(profileId, key, fallback){
+  try {
+    const v = localStorage.getItem(profileKey(profileId, key));
+    return v !== null ? JSON.parse(v) : fallback;
+  } catch(e){ return fallback; }
+}
+
+function setProfileData(profileId, key, value){
+  try { localStorage.setItem(profileKey(profileId, key), JSON.stringify(value)); } catch(e){}
+}
+
+// Override SRS functions to be profile-aware
+function srsGet(word){
+  if(!currentProfile) return null;
+  try {
+    const d = localStorage.getItem(profileKey(currentProfile.id, 'srs_'+word));
+    return d ? JSON.parse(d) : null;
+  } catch(e){ return null; }
+}
+function srsSet(word, data){
+  if(!currentProfile) return;
+  try { localStorage.setItem(profileKey(currentProfile.id, 'srs_'+word), JSON.stringify(data)); } catch(e){}
+}
+function srsDueWords(){
+  if(!currentProfile) return [];
+  const now = Date.now();
+  const due = [];
+  try {
+    const prefix = profileKey(currentProfile.id, 'srs_');
+    for(let i=0; i<localStorage.length; i++){
+      const key = localStorage.key(i);
+      if(!key.startsWith(prefix)) continue;
+      const d = JSON.parse(localStorage.getItem(key));
+      if(d && d.due <= now) due.push(key.slice(prefix.length));
+    }
+  } catch(e){}
+  return due;
+}
+
+// ── Topic progress tracking ──
+function markTopicWord(topicId, word, known){
+  if(!currentProfile) return;
+  const key = 'tp_' + topicId;
+  let progress = getProfileData(currentProfile.id, key, {});
+  progress[word] = known ? 'known' : 'seen';
+  setProfileData(currentProfile.id, key, progress);
+}
+
+function getTopicProgress(topicId, words){
+  if(!currentProfile) return { known:0, seen:0, total: words.length };
+  const progress = getProfileData(currentProfile.id, 'tp_' + topicId, {});
+  let known = 0, seen = 0;
+  for(const w of words){
+    if(progress[w] === 'known') known++;
+    else if(progress[w] === 'seen') seen++;
+  }
+  return { known, seen, total: words.length };
+}
+
+// Count total words across all pages of a base topic id
+function getBaseTopicProgress(baseId, level){
+  const allPages = (TOPICS[level] || []).filter(t => t.id === baseId || t.id.startsWith(baseId + '_p'));
+  let known=0, total=0;
+  for(const page of allPages){
+    const p = getTopicProgress(page.id, page.words);
+    known += p.known; total += p.total;
+  }
+  return { known, total };
+}
+
+// ── Render profiles screen ──
+function renderProfileScreen(){
+  const profiles = getAllProfiles();
+  const row = document.getElementById('profiles-row');
+  const picker = document.getElementById('avatar-picker');
+  const newArea = document.getElementById('new-profile-area');
+
+  // Avatar picker
+  picker.innerHTML = AVATARS.map((av,i) =>
+    `<div class="av-opt${i===0?' picked':''}" data-av="${av}" onclick="pickAvatar(this)">${av}</div>`
+  ).join('');
+
+  // Profile buttons
+  if(profiles.length === 0){
+    row.innerHTML = '';
+    newArea.style.display = '';
+    document.getElementById('prof-screen-title').textContent = 'Создай первый профиль';
+  } else {
+    row.innerHTML = profiles.map(p => {
+      const totalKnown = getTotalKnownWords(p.id);
+      return `<div class="profile-btn" onclick="selectProfile('${p.id}')">
+        <div class="profile-avatar">${p.avatar}</div>
+        <div class="profile-name">${p.name}</div>
+        <div class="profile-stats-mini">${totalKnown} слов изучено</div>
+      </div>`;
+    }).join('');
+    newArea.style.display = '';
+    document.getElementById('prof-screen-title').textContent = 'Кто учится?';
+  }
+}
+
+function getTotalKnownWords(profileId){
+  let count = 0;
+  try {
+    const prefix = `p_${profileId}_tp_`;
+    for(let i=0; i<localStorage.length; i++){
+      const key = localStorage.key(i);
+      if(!key.startsWith(prefix)) continue;
+      const data = JSON.parse(localStorage.getItem(key));
+      count += Object.values(data).filter(v => v==='known').length;
+    }
+  } catch(e){}
+  return count;
+}
+
+function pickAvatar(el){
+  document.querySelectorAll('.av-opt').forEach(a => a.classList.remove('picked'));
+  el.classList.add('picked');
+}
+
+function createProfile(){
+  const name = document.getElementById('new-name-input').value.trim();
+  if(!name){ document.getElementById('new-name-input').focus(); return; }
+  const picked = document.querySelector('.av-opt.picked');
+  const avatar = picked ? picked.dataset.av : '🧑';
+  const id = 'u_' + Date.now();
+  const profiles = getAllProfiles();
+  profiles.push({ id, name, avatar });
+  saveProfiles(profiles);
+  document.getElementById('new-name-input').value = '';
+  selectProfile(id);
+}
+
+function selectProfile(id){
+  const profiles = getAllProfiles();
+  currentProfile = profiles.find(p => p.id === id);
+  if(!currentProfile) return;
+  try { localStorage.setItem('wk_last_profile', id); } catch(e){}
+  // Update header
+  document.getElementById('header-avatar').textContent = currentProfile.avatar;
+  document.getElementById('header-name').textContent = currentProfile.name;
+  document.getElementById('header-profile').style.display = 'flex';
+  // Go to home
+  buildTopics();
+  showScreen('home-screen');
+  updateSrsBanner();
+}
+
+function switchProfile(){
+  renderProfileScreen();
+  document.getElementById('header-profile').style.display = 'none';
+  // Hide all screens, show profile
+  ['home-screen','loading-screen','cards-screen','finish-screen','srs-screen']
+    .forEach(id => document.getElementById(id).style.display='none');
+  document.getElementById('profile-screen').style.display='flex';
+}
+
+// ── Override showScreen to hide profile screen too ──
+function showScreen(name){
+  ['profile-screen','home-screen','loading-screen','cards-screen','finish-screen','srs-screen']
+    .forEach(id => document.getElementById(id).style.display='none');
+  const el = document.getElementById(name);
+  if(el) el.style.display = name === 'profile-screen' ? 'flex' : 'block';
+}
+
+// ── Override goHome to refresh topic progress ──
+function goHome(){
+  buildTopics();
+  showScreen('home-screen');
+  document.getElementById('gen-btn').disabled = false;
+  updateSrsBanner();
+}
+
+// ── Override swipeCard to track topic progress ──
+const _origSwipe = swipeCard;
+// We'll patch it inline below in the flow instead
+
+// ════════════════════════════════════════════
+//  OVERRIDE buildTopics with progress bars
+// ════════════════════════════════════════════
+function buildTopics(){
+  const grid = document.getElementById('topics-grid');
+  const list = TOPICS[activeLevel] || [];
+  grid.innerHTML = list.map(t => {
+    const pageInfo = t.totalPages > 1
+      ? `<br><span style="font-size:10px;opacity:.6">стр. ${t.page} из ${t.totalPages}</span>`
+      : '';
+
+    const prog = currentProfile ? getTopicProgress(t.id, t.words) : {known:0, total:t.words.length};
+    const pct = prog.total > 0 ? Math.round(prog.known / prog.total * 100) : 0;
+    const progressBar = currentProfile ? `
+      <div class="tc-progress">
+        <div class="tc-progress-fill" style="width:${pct}%"></div>
+      </div>
+      <div class="tc-counts">
+        <span class="known-c">✓ ${prog.known}</span>
+        <span>${prog.total - prog.known} осталось</span>
+      </div>` : '';
+
+    return `
+    <div class="topic-card" onclick="loadTopic('${t.id}')">
+      <div class="tc-emoji">${t.emoji}</div>
+      <div class="tc-name">${t.name}${pageInfo}</div>
+      <div class="tc-meta">${t.words.length} слов</div>
+      ${progressBar}
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════
+//  BOOT
+// ════════════════════════════════════════════
+(function boot(){
+  // Try to restore last profile
+  try {
+    const lastId = localStorage.getItem('wk_last_profile');
+    if(lastId){
+      const profiles = getAllProfiles();
+      const found = profiles.find(p => p.id === lastId);
+      if(found){
+        currentProfile = found;
+        document.getElementById('header-avatar').textContent = found.avatar;
+        document.getElementById('header-name').textContent = found.name;
+        document.getElementById('header-profile').style.display = 'flex';
+        buildTopics();
+        showScreen('home-screen');
+        updateSrsBanner();
+        return;
+      }
+    }
+  } catch(e){}
+  // No profile — show profile screen
+  renderProfileScreen();
+  showScreen('profile-screen');
+})();
+</script>
+</body>
+</html>
