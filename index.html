@@ -3156,103 +3156,97 @@ const stage = document.getElementById('card-stage');
 const cont = document.getElementById('card-container');
 const overlay = document.getElementById('swipe-overlay');
 
-// ── Touch/Mouse state ──
-let _touchStartX = 0;
-let _touchStartY = 0;
-let _touchStartT = 0;
-let _dragX = 0;
-let _isDragging = false;
-let _active = false;
+// ── Swipe state ──
+let _sx = 0, _sy = 0, _dx = 0, _swiping = false, _started = false;
 
-function _getXY(e){
-  if(e.touches && e.touches.length) return {x: e.touches[0].clientX, y: e.touches[0].clientY};
-  if(e.changedTouches && e.changedTouches.length) return {x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY};
-  return {x: e.clientX, y: e.clientY};
-}
+// ── CLICK = переворот (работает на всех устройствах) ──
+cont.addEventListener('click', function(e){
+  if(e.target.closest('button')) return; // кнопки не перехватываем
+  if(Math.abs(_dx) > 5) return;          // после свайпа не переворачиваем
+  flipCard();
+});
 
-function _onStart(e){
-  if(document.getElementById('cards-screen').style.display === 'none') return;
-  // Ignore taps on buttons
-  if(e.target && e.target.closest('button')) return;
-  const {x, y} = _getXY(e);
-  _touchStartX = x;
-  _touchStartY = y;
-  _touchStartT = Date.now();
-  _dragX = 0;
-  _isDragging = false;
-  _active = true;
-}
+// ── TOUCH: только горизонтальный свайп ──
+cont.addEventListener('touchstart', function(e){
+  if(e.target.closest('button')) return;
+  _sx = e.touches[0].clientX;
+  _sy = e.touches[0].clientY;
+  _dx = 0;
+  _swiping = false;
+  _started = true;
+}, {passive: true});
 
-function _onMove(e){
-  if(!_active) return;
-  const {x, y} = _getXY(e);
-  const dx = x - _touchStartX;
-  const dy = y - _touchStartY;
+cont.addEventListener('touchmove', function(e){
+  if(!_started) return;
+  const dx = e.touches[0].clientX - _sx;
+  const dy = e.touches[0].clientY - _sy;
 
-  // Become a drag only when clearly horizontal
-  if(!_isDragging){
-    if(Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.2){
-      _isDragging = true;
-    } else if(Math.abs(dy) > 10){
-      // vertical scroll — cancel
-      _active = false;
-      return;
-    } else {
-      return;
-    }
+  if(!_swiping){
+    if(Math.abs(dy) > Math.abs(dx)) { _started = false; return; } // вертикаль — скролл
+    if(Math.abs(dx) < 8) return;
+    _swiping = true;
   }
 
-  if(e.cancelable) e.preventDefault();
-  _dragX = dx;
+  e.preventDefault();
+  _dx = dx;
   cont.style.transform = `translateX(${dx}px) rotate(${dx * 0.06}deg)`;
   overlay.className = 'swipe-overlay';
   if(dx > 50){ overlay.classList.add('show-right'); overlay.textContent = '✓'; }
   else if(dx < -50){ overlay.classList.add('show-left'); overlay.textContent = '✗'; }
   document.getElementById('hint-left').classList.toggle('active', dx < -30);
   document.getElementById('hint-right').classList.toggle('active', dx > 30);
-}
+}, {passive: false});
 
-function _onEnd(e){
-  if(!_active) return;
-  _active = false;
-
-  const dt = Date.now() - _touchStartT;
-
-  // Reset visual hints
+cont.addEventListener('touchend', function(e){
+  if(!_started) return;
+  _started = false;
   document.getElementById('hint-left').classList.remove('active');
   document.getElementById('hint-right').classList.remove('active');
-
-  if(!_isDragging){
-    // It was a tap — flip the card
-    // Guard: only flip if touch duration < 500ms (not a long-press)
-    if(dt < 500){
-      overlay.className = 'swipe-overlay';
-      cont.style.transform = '';
-      flipCard();
-    }
-    return;
-  }
-
   overlay.className = 'swipe-overlay';
 
-  if(_dragX > 80) swipeCard('right');
-  else if(_dragX < -80) swipeCard('left');
+  if(!_swiping) return; // был тап — click сам сработает
+
+  if(_dx > 80) swipeCard('right');
+  else if(_dx < -80) swipeCard('left');
   else {
     cont.classList.add('animating');
     cont.style.transform = '';
     setTimeout(() => cont.classList.remove('animating'), 350);
   }
-}
+  _dx = 0;
+}, {passive: true});
 
-// Mouse events
-stage.addEventListener('mousedown', _onStart);
-window.addEventListener('mousemove', _onMove);
-window.addEventListener('mouseup', _onEnd);
-
-// Touch events — touchmove passive:false only on cont so scroll still works on stage
-stage.addEventListener('touchstart', _onStart, {passive: true});
-cont.addEventListener('touchmove', _onMove, {passive: false});
-stage.addEventListener('touchend', _onEnd, {passive: true});
+// ── MOUSE: drag для десктопа ──
+let _mx = 0, _mDragging = false;
+cont.addEventListener('mousedown', function(e){
+  if(e.target.closest('button')) return;
+  _mx = e.clientX; _dx = 0; _mDragging = false;
+});
+window.addEventListener('mousemove', function(e){
+  if(!e.buttons) return;
+  const dx = e.clientX - _mx;
+  if(Math.abs(dx) < 5) return;
+  _mDragging = true; _dx = dx;
+  cont.style.transform = `translateX(${dx}px) rotate(${dx*0.06}deg)`;
+  overlay.className = 'swipe-overlay';
+  if(dx > 50){ overlay.classList.add('show-right'); overlay.textContent = '✓'; }
+  else if(dx < -50){ overlay.classList.add('show-left'); overlay.textContent = '✗'; }
+});
+window.addEventListener('mouseup', function(e){
+  if(!_mDragging){ _dx = 0; return; }
+  _mDragging = false;
+  overlay.className = 'swipe-overlay';
+  document.getElementById('hint-left').classList.remove('active');
+  document.getElementById('hint-right').classList.remove('active');
+  if(_dx > 80) swipeCard('right');
+  else if(_dx < -80) swipeCard('left');
+  else {
+    cont.classList.add('animating');
+    cont.style.transform = '';
+    setTimeout(() => cont.classList.remove('animating'), 350);
+  }
+  _dx = 0;
+});
 
 // ════════════════════════════════════════════
 //  KEYBOARD
