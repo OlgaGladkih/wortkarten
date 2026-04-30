@@ -773,8 +773,6 @@ header{
   <div class="section-label">Темы</div>
   <div class="topics-grid" id="topics-grid"></div>
 
-  <div class="divider">или</div>
-  <button class="gen-btn" id="gen-btn" onclick="openCustomScreen()">✦ Свои карточки</button>
 </div>
 
 <!-- CUSTOM DECK SCREEN -->
@@ -2931,7 +2929,7 @@ async function startSrsReview(){
 }
 
 async function generateCards(wordList, deckName, level){
-  document.getElementById('gen-btn').disabled = true;
+  // gen-btn removed
   showScreen('loading-screen');
   document.getElementById('loading-title').textContent = `Загружаем ${wordList.length} карточек...`;
 
@@ -2964,7 +2962,7 @@ async function generateCards(wordList, deckName, level){
   updateStats();
   loadCard(0);
   showScreen('cards-screen');
-  document.getElementById('gen-btn').disabled = false;
+  // gen-btn removed
 }
 
 function showError(msg){
@@ -3253,7 +3251,7 @@ function restartDeck(){
 
 function goHome(){
   showScreen('home-screen');
-  document.getElementById('gen-btn').disabled = false;
+  // gen-btn removed
   updateSrsBanner();
 }
 
@@ -3444,7 +3442,7 @@ function showScreen(name){
 function goHome(){
   buildTopics();
   showScreen('home-screen');
-  document.getElementById('gen-btn').disabled = false;
+  // gen-btn removed
   updateSrsBanner();
 }
 
@@ -3799,7 +3797,7 @@ async function cwStartDeck(){
 }
 
 async function generateCardsWithCustom(wordList, customTranslations, deckName){
-  document.getElementById('gen-btn').disabled = true;
+  // gen-btn removed
   showScreen('loading-screen');
   document.getElementById('loading-title').textContent = `Загружаем ${wordList.length} карточек...`;
   await new Promise(r => setTimeout(r, 50));
@@ -3831,7 +3829,7 @@ async function generateCardsWithCustom(wordList, customTranslations, deckName){
   updateStats();
   loadCard(0);
   showScreen('cards-screen');
-  document.getElementById('gen-btn').disabled = false;
+  // gen-btn removed
 }
 
 </script>
