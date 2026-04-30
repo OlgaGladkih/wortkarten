@@ -3152,81 +3152,107 @@ function showFinish(){
 // ════════════════════════════════════════════
 //  TOUCH / MOUSE SWIPE
 // ════════════════════════════════════════════
-let dragStart = null;
-let dragging = false;
-let dragX = 0;
-
 const stage = document.getElementById('card-stage');
 const cont = document.getElementById('card-container');
 const overlay = document.getElementById('swipe-overlay');
 
-function onPointerDown(e){
-  if(document.getElementById('cards-screen').style.display === 'none') return;
-  const x = e.touches ? e.touches[0].clientX : e.clientX;
-  const y = e.touches ? e.touches[0].clientY : e.clientY;
-  dragStart = {x, y};
-  dragging = false;
-  dragX = 0;
+// ── Touch/Mouse state ──
+let _touchStartX = 0;
+let _touchStartY = 0;
+let _touchStartT = 0;
+let _dragX = 0;
+let _isDragging = false;
+let _active = false;
+
+function _getXY(e){
+  if(e.touches && e.touches.length) return {x: e.touches[0].clientX, y: e.touches[0].clientY};
+  if(e.changedTouches && e.changedTouches.length) return {x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY};
+  return {x: e.clientX, y: e.clientY};
 }
 
-function onPointerMove(e){
-  if(!dragStart) return;
-  const x = e.touches ? e.touches[0].clientX : e.clientX;
-  const y = e.touches ? e.touches[0].clientY : e.clientY;
-  const dx = x - dragStart.x;
-  const dy = y - dragStart.y;
-  // Only count as drag if horizontal movement is dominant and > threshold
-  if(!dragging && (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.5)) dragging = true;
-  if(!dragging) return;
+function _onStart(e){
+  if(document.getElementById('cards-screen').style.display === 'none') return;
+  // Ignore taps on buttons
+  if(e.target && e.target.closest('button')) return;
+  const {x, y} = _getXY(e);
+  _touchStartX = x;
+  _touchStartY = y;
+  _touchStartT = Date.now();
+  _dragX = 0;
+  _isDragging = false;
+  _active = true;
+}
+
+function _onMove(e){
+  if(!_active) return;
+  const {x, y} = _getXY(e);
+  const dx = x - _touchStartX;
+  const dy = y - _touchStartY;
+
+  // Become a drag only when clearly horizontal
+  if(!_isDragging){
+    if(Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.2){
+      _isDragging = true;
+    } else if(Math.abs(dy) > 10){
+      // vertical scroll — cancel
+      _active = false;
+      return;
+    } else {
+      return;
+    }
+  }
+
   if(e.cancelable) e.preventDefault();
-
-  dragX = dx;
-  const rot = dx * 0.06;
-  cont.style.transform = `translateX(${dx}px) rotate(${rot}deg)`;
-
+  _dragX = dx;
+  cont.style.transform = `translateX(${dx}px) rotate(${dx * 0.06}deg)`;
   overlay.className = 'swipe-overlay';
   if(dx > 50){ overlay.classList.add('show-right'); overlay.textContent = '✓'; }
   else if(dx < -50){ overlay.classList.add('show-left'); overlay.textContent = '✗'; }
-
-  // hint highlight
   document.getElementById('hint-left').classList.toggle('active', dx < -30);
   document.getElementById('hint-right').classList.toggle('active', dx > 30);
 }
 
-function onPointerUp(e){
-  if(!dragStart) return;
-  // Check if tap was on fav-btn — don't flip
-  if(e.target && e.target.closest && e.target.closest('.fav-btn')){
-    dragStart = null; dragging = false;
-    return;
-  }
-  if(!dragging){
-    // tap = flip
-    dragStart = null;
-    flipCard();
-    return;
-  }
-  dragStart = null;
-  dragging = false;
+function _onEnd(e){
+  if(!_active) return;
+  _active = false;
+
+  const dt = Date.now() - _touchStartT;
+
+  // Reset visual hints
   document.getElementById('hint-left').classList.remove('active');
   document.getElementById('hint-right').classList.remove('active');
+
+  if(!_isDragging){
+    // It was a tap — flip the card
+    // Guard: only flip if touch duration < 500ms (not a long-press)
+    if(dt < 500){
+      overlay.className = 'swipe-overlay';
+      cont.style.transform = '';
+      flipCard();
+    }
+    return;
+  }
+
   overlay.className = 'swipe-overlay';
 
-  if(dragX > 80) swipeCard('right');
-  else if(dragX < -80) swipeCard('left');
+  if(_dragX > 80) swipeCard('right');
+  else if(_dragX < -80) swipeCard('left');
   else {
     cont.classList.add('animating');
     cont.style.transform = '';
-    setTimeout(()=>cont.classList.remove('animating'), 400);
+    setTimeout(() => cont.classList.remove('animating'), 350);
   }
 }
 
-stage.addEventListener('mousedown', onPointerDown);
-window.addEventListener('mousemove', onPointerMove);
-window.addEventListener('mouseup', onPointerUp);
-stage.addEventListener('touchstart', onPointerDown, {passive:false});
-stage.addEventListener('touchmove', onPointerMove, {passive:false});
-stage.addEventListener('touchend', onPointerUp);
+// Mouse events
+stage.addEventListener('mousedown', _onStart);
+window.addEventListener('mousemove', _onMove);
+window.addEventListener('mouseup', _onEnd);
+
+// Touch events — touchmove passive:false only on cont so scroll still works on stage
+stage.addEventListener('touchstart', _onStart, {passive: true});
+cont.addEventListener('touchmove', _onMove, {passive: false});
+stage.addEventListener('touchend', _onEnd, {passive: true});
 
 // ════════════════════════════════════════════
 //  KEYBOARD
