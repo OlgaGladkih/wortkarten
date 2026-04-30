@@ -301,15 +301,15 @@ header{
 .gender-neut .card-img{background:rgba(58,155,111,.08);}
 
 .gender-badge{
-  position:absolute;top:10px;right:10px;
+  display:inline-block;
   padding:3px 9px;border-radius:20px;
-  font-size:10px;font-weight:700;letter-spacing:1px;
-  color:#fff;
+  font-size:11px;font-weight:700;letter-spacing:1px;
+  color:#fff;flex-shrink:0;
 }
 .badge-der{background:var(--masc);}
 .badge-die{background:var(--fem);}
 .badge-das{background:var(--neut);}
-.badge-none{background:var(--none-col);}
+.badge-none{display:none;}
 
 .level-badge{
   position:absolute;top:10px;left:10px;
@@ -320,9 +320,10 @@ header{
 }
 
 .card-word-strip{
-  padding:14px 18px;
+  padding:12px 18px;
   display:flex;align-items:center;justify-content:space-between;
   border-top:1px solid var(--border);
+  gap:8px;
 }
 .card-word{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;}
 .flip-hint{font-size:10px;color:var(--text-dim);}
@@ -560,6 +561,159 @@ header{
   .profiles-row{gap:12px;}
   .profile-btn{width:110px;}
 }
+
+/* ─── FAVOURITES ─── */
+.fav-btn{
+  position:absolute;top:10px;right:10px;
+  background:rgba(0,0,0,0.35);border:1.5px solid rgba(255,255,255,0.18);
+  border-radius:50%;width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;cursor:pointer;z-index:10;
+  color:#aaa;transition:all .2s;
+  backdrop-filter:blur(4px);
+}
+.fav-btn.active{
+  background:rgba(232,197,71,0.2);
+  border-color:var(--accent);
+  color:var(--accent);
+  transform:scale(1.1);
+}
+.fav-btn:hover{border-color:rgba(255,255,255,0.4);color:#fff;}
+
+/* ─── BOTTOM NAV ─── */
+.bottom-nav{
+  display:flex;justify-content:space-around;align-items:center;
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:8px 0 max(8px, env(safe-area-inset-bottom));
+  z-index:100;
+}
+.bn-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:none;border:none;cursor:pointer;padding:4px 16px;
+  font-size:10px;color:var(--text-muted);font-family:'DM Sans',sans-serif;
+  transition:color .2s;
+}
+.bn-btn .bn-icon{font-size:22px;}
+.bn-btn.active{color:var(--accent);}
+#home-screen, #favourites-screen{padding-bottom:70px;}
+
+/* ─── FAVOURITES SCREEN ─── */
+#favourites-screen{display:none;}
+.fav-header{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.fav-header h2{font-family:'Playfair Display',serif;font-size:26px;margin:0;}
+.fav-empty{text-align:center;padding:60px 20px;color:var(--text-muted);}
+.fav-empty .fav-empty-icon{font-size:50px;margin-bottom:14px;}
+.fav-word-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.fav-word-item{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:10px 14px;
+  cursor:pointer;transition:border-color .2s,transform .15s;
+}
+.fav-word-item:hover{border-color:var(--accent);transform:translateY(-1px);}
+.fav-word-article{
+  font-size:10px;font-weight:700;letter-spacing:.8px;
+  padding:2px 7px;border-radius:20px;color:#fff;
+  margin-right:8px;flex-shrink:0;align-self:center;
+}
+.fav-art-der{background:var(--masc);}
+.fav-art-die{background:var(--fem);}
+.fav-art-das{background:var(--neut);}
+.fav-word-center{display:flex;flex-direction:column;flex:1;min-width:0;}
+.fav-word-de{font-weight:600;font-size:15px;}
+.fav-word-ru{font-size:12px;color:var(--text-muted);margin-top:2px;}
+.fav-word-emoji{font-size:22px;margin-right:10px;flex-shrink:0;}
+.fav-word-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.fav-remove-btn{background:none;border:none;font-size:16px;cursor:pointer;opacity:.3;padding:4px;color:var(--text);}
+.fav-remove-btn:hover{opacity:1;color:#e05;}
+.fav-open-btn{background:none;border:none;font-size:14px;cursor:pointer;opacity:.4;padding:4px;color:var(--text);}
+.fav-open-btn:hover{opacity:1;color:var(--accent);}
+.fav-start-btn{
+  width:100%;padding:14px;border:none;border-radius:12px;
+  background:var(--accent);color:#000;font-weight:700;font-size:15px;
+  cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:10px;
+}
+.fav-start-btn:hover{background:var(--accent2);}
+.fav-clear-btn{
+  width:100%;padding:10px;border:1px solid var(--border);border-radius:12px;
+  background:none;color:var(--text-muted);font-size:13px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+}
+
+/* ─── LEVEL PROGRESS ─── */
+.level-progress-row{
+  display:flex;align-items:center;gap:8px;margin-bottom:16px;
+}
+.level-progress-label{font-size:12px;color:var(--text-muted);white-space:nowrap;}
+.level-progress-bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.level-progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .5s ease;}
+.level-progress-pct{font-size:12px;color:var(--accent);font-weight:600;white-space:nowrap;min-width:32px;text-align:right;}
+
+
+/* ─── CUSTOM DECK SCREEN ─── */
+#custom-screen{display:none;padding-bottom:70px;}
+.custom-screen-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:24px;
+}
+.custom-screen-header h2{
+  font-family:'Playfair Display',serif;font-size:24px;margin:0;flex:1;
+}
+.custom-back-btn{
+  background:none;border:none;color:var(--text-muted);
+  font-size:20px;cursor:pointer;padding:4px;
+}
+
+.cw-word-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;}
+.cw-row{
+  display:flex;gap:8px;align-items:center;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:12px;padding:10px 12px;
+  transition:border-color .2s;
+}
+.cw-row:focus-within{border-color:var(--accent);}
+.cw-row-fields{display:flex;flex-direction:column;gap:6px;flex:1;}
+.cw-input{
+  background:none;border:none;outline:none;
+  color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:14px;width:100%;
+}
+.cw-input::placeholder{color:var(--text-dim);}
+.cw-input-de{font-weight:600;}
+.cw-input-ru{font-size:12px;color:var(--text-muted);}
+.cw-divider{height:1px;background:var(--border);margin:0;}
+.cw-remove-btn{
+  background:none;border:none;color:var(--text-dim);
+  font-size:18px;cursor:pointer;padding:2px 4px;
+  flex-shrink:0;line-height:1;
+  transition:color .2s;
+}
+.cw-remove-btn:hover{color:#e05;} 
+
+.cw-add-btn{
+  width:100%;padding:11px;
+  background:none;border:1.5px dashed var(--border);
+  border-radius:12px;color:var(--text-muted);
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  cursor:pointer;transition:border-color .2s,color .2s;
+  margin-bottom:18px;
+}
+.cw-add-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+.cw-start-btn{
+  width:100%;padding:14px;border:none;border-radius:12px;
+  background:var(--accent);color:#000;font-weight:700;font-size:15px;
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:background .2s;
+}
+.cw-start-btn:hover{background:var(--accent2);}
+.cw-start-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+.cw-hint{
+  font-size:11px;color:var(--text-dim);text-align:center;
+  margin-bottom:16px;line-height:1.5;
+}
+
 </style>
 </head>
 <body>
@@ -619,13 +773,20 @@ header{
   <div class="section-label">Темы</div>
   <div class="topics-grid" id="topics-grid"></div>
 
-  <div class="divider">или введи свои слова</div>
-  <div class="custom-box">
-    <label>Слова через запятую или с новой строки</label>
-    <textarea id="words-input" placeholder="Haus, Hund, fahren, schön..."></textarea>
-    <button class="gen-btn" id="gen-btn" onclick="generateCustom()">✦ Создать карточки</button>
-    <div class="error-msg" id="error-msg"></div>
+  <div class="divider">или</div>
+  <button class="gen-btn" id="gen-btn" onclick="openCustomScreen()">✦ Свои карточки</button>
+</div>
+
+<!-- CUSTOM DECK SCREEN -->
+<div class="screen" id="custom-screen">
+  <div class="custom-screen-header">
+    <button class="custom-back-btn" onclick="closeCustomScreen()">←</button>
+    <h2>Свои карточки</h2>
   </div>
+  <p class="cw-hint">Добавь немецкие слова и по желанию — их перевод.<br>Перевод можно оставить пустым.</p>
+  <div class="cw-word-rows" id="cw-rows"></div>
+  <button class="cw-add-btn" onclick="cwAddRow()">+ Добавить слово</button>
+  <button class="cw-start-btn" id="cw-start-btn" onclick="cwStartDeck()">▶ Учить</button>
 </div>
 
 <!-- LOADING -->
@@ -658,6 +819,7 @@ header{
   </div>
 
   <div class="card-stage" id="card-stage">
+  <button class="fav-btn" id="fav-btn" onclick="toggleFavourite()" title="В избранное">☆</button>
     <div class="swipe-overlay" id="swipe-overlay"></div>
     <div class="card-container" id="card-container">
       <div class="card-inner" id="card-inner">
@@ -665,10 +827,12 @@ header{
           <div class="card-img" id="card-img">
             <span id="card-emoji">🏠</span>
             <div class="level-badge" id="level-badge">A1</div>
-            <div class="gender-badge" id="gender-badge">das</div>
           </div>
           <div class="card-word-strip">
-            <span class="card-word" id="card-word">Haus</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="gender-badge" id="gender-badge">das</div>
+              <span class="card-word" id="card-word">Haus</span>
+            </div>
             <span class="flip-hint">нажми →</span>
           </div>
         </div>
@@ -717,6 +881,16 @@ header{
     <p>Следующие слова будут готовы завтра.</p>
     <button class="nav-btn primary" onclick="goHome()">← К темам</button>
   </div>
+</div>
+
+
+<!-- FAVOURITES SCREEN -->
+<div class="screen" id="favourites-screen">
+  <div class="fav-header">
+    <div style="font-size:28px;">⭐</div>
+    <h2>Избранные</h2>
+  </div>
+  <div id="fav-content"></div>
 </div>
 
 <script>
@@ -2700,6 +2874,7 @@ document.querySelectorAll('.level-tab').forEach(btn => {
 });
 
 function buildTopics(){
+  buildLevelProgress();
   const grid = document.getElementById('topics-grid');
   const list = TOPICS[activeLevel] || [];
   grid.innerHTML = list.map(t => {
@@ -2714,9 +2889,11 @@ function buildTopics(){
 }
 
 function showScreen(name){
-  ['home-screen','loading-screen','cards-screen','finish-screen','srs-screen']
+  ['home-screen','loading-screen','cards-screen','finish-screen','srs-screen','favourites-screen','custom-screen']
     .forEach(id => document.getElementById(id).style.display='none');
   document.getElementById(name).style.display='block';
+  const nav = document.getElementById('bottom-nav');
+  if(nav) nav.style.display = (name==='home-screen'||name==='favourites-screen') ? 'flex' : 'none';
 }
 
 // ════════════════════════════════════════════
@@ -2807,6 +2984,7 @@ function getGenderClass(article, isPlural){
 }
 
 function loadCard(idx){
+  setTimeout(updateFavBtn, 0);
   if(idx < 0 || idx >= cards.length) return;
   const c = cards[idx];
   const gc = getGenderClass(c.article, c.plural === true);
@@ -2999,7 +3177,8 @@ function onPointerMove(e){
   const y = e.touches ? e.touches[0].clientY : e.clientY;
   const dx = x - dragStart.x;
   const dy = y - dragStart.y;
-  if(!dragging && Math.abs(dx) > 8) dragging = true;
+  // Only count as drag if horizontal movement is dominant and > threshold
+  if(!dragging && (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.5)) dragging = true;
   if(!dragging) return;
   if(e.cancelable) e.preventDefault();
 
@@ -3018,6 +3197,11 @@ function onPointerMove(e){
 
 function onPointerUp(e){
   if(!dragStart) return;
+  // Check if tap was on fav-btn — don't flip
+  if(e.target && e.target.closest && e.target.closest('.fav-btn')){
+    dragStart = null; dragging = false;
+    return;
+  }
   if(!dragging){
     // tap = flip
     dragStart = null;
@@ -3272,6 +3456,7 @@ const _origSwipe = swipeCard;
 //  OVERRIDE buildTopics with progress bars
 // ════════════════════════════════════════════
 function buildTopics(){
+  buildLevelProgress();
   const grid = document.getElementById('topics-grid');
   const list = TOPICS[activeLevel] || [];
   grid.innerHTML = list.map(t => {
@@ -3326,6 +3511,343 @@ function buildTopics(){
   renderProfileScreen();
   showScreen('profile-screen');
 })();
+
+// ════════════════════════════════════════════
+//  FAVOURITES
+// ════════════════════════════════════════════
+function getFavourites(){
+  if(!currentProfile) return [];
+  try{ return JSON.parse(localStorage.getItem('p_'+currentProfile.id+'_favs') || '[]'); }
+  catch(e){ return []; }
+}
+function saveFavourites(list){
+  if(!currentProfile) return;
+  try{ localStorage.setItem('p_'+currentProfile.id+'_favs', JSON.stringify(list)); } catch(e){}
+}
+function isFavourite(word){
+  return getFavourites().includes(word);
+}
+function toggleFavourite(){
+  if(!cards[currentIndex]) return;
+  const word = cards[currentIndex].word;
+  let favs = getFavourites();
+  const btn = document.getElementById('fav-btn');
+  if(favs.includes(word)){
+    favs = favs.filter(w => w !== word);
+    btn.textContent = '☆';
+    btn.classList.remove('active');
+  } else {
+    favs.push(word);
+    btn.textContent = '★';
+    btn.classList.add('active');
+  }
+  saveFavourites(favs);
+}
+function updateFavBtn(){
+  const btn = document.getElementById('fav-btn');
+  if(!btn || !cards[currentIndex]) return;
+  const word = cards[currentIndex].word;
+  const isFav = isFavourite(word);
+  btn.textContent = isFav ? '★' : '☆';
+  btn.classList.toggle('active', isFav);
+}
+
+// ─── FAVOURITES SCREEN ───
+function buildFavouritesScreen(){
+  const favs = getFavourites();
+  const cont = document.getElementById('fav-content');
+  if(!favs.length){
+    cont.innerHTML = `<div class="fav-empty">
+      <div class="fav-empty-icon">☆</div>
+      <p>Здесь появятся слова, которые ты отметишь звёздочкой ★ во время изучения карточек.</p>
+    </div>`;
+    return;
+  }
+  const items = favs.map(w => {
+    const d = WORD_DICT[w] || ['—','','📖','',''];
+    const art = d[1] || '';
+    const emoji = d[2] || '📖';
+    const translation = d[0] || '—';
+    // The word key already contains article (e.g. "der Name") — strip it for display
+    const displayWord = w.replace(/^(der|die|das)\s+/i, '');
+
+    let artBadge = '';
+    if(art === 'der') artBadge = `<span class="fav-word-article fav-art-der">der</span>`;
+    else if(art === 'die') artBadge = `<span class="fav-word-article fav-art-die">die</span>`;
+    else if(art === 'das') artBadge = `<span class="fav-word-article fav-art-das">das</span>`;
+
+    const safeW = w.replace(/"/g,'&quot;');
+    return `<div class="fav-word-item" onclick="favOpenWord('${safeW.replace(/'/g,'&#39;')}')">
+      <span class="fav-word-emoji">${emoji}</span>
+      ${artBadge}
+      <div class="fav-word-center">
+        <div class="fav-word-de">${displayWord}</div>
+        <div class="fav-word-ru">${translation}</div>
+      </div>
+      <div class="fav-word-right">
+        <button class="fav-open-btn" onclick="event.stopPropagation();favOpenWord('${safeW.replace(/'/g,'&#39;')}')" title="Учить это слово">▶</button>
+        <button class="fav-remove-btn" onclick="event.stopPropagation();removeFavourite(this)" data-word="${safeW}" title="Удалить">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+  cont.innerHTML = `<div class="fav-word-list">${items}</div>
+    <button class="fav-start-btn" onclick="startFavouritesDeck()">▶ Учить все избранные (${favs.length})</button>
+    <button class="fav-clear-btn" onclick="clearFavourites()">Очистить список</button>`;
+}
+
+async function favOpenWord(word){
+  // Open a single word as a one-card deck
+  switchTab('home');
+  await generateCards([word], '⭐ ' + word, activeLevel);
+}
+function removeFavourite(btn){
+  const word = btn.dataset.word;
+  let favs = getFavourites().filter(w => w !== word);
+  saveFavourites(favs);
+  buildFavouritesScreen();
+}
+function clearFavourites(){
+  if(!confirm('Очистить весь список избранных?')) return;
+  saveFavourites([]);
+  buildFavouritesScreen();
+}
+async function startFavouritesDeck(){
+  const favs = getFavourites();
+  if(!favs.length) return;
+  switchTab('home');
+  await generateCards(favs, '⭐ Избранные', activeLevel);
+}
+
+// ════════════════════════════════════════════
+//  TAB NAVIGATION
+// ════════════════════════════════════════════
+let currentTab = 'home';
+function switchTab(tab){
+  currentTab = tab;
+  document.getElementById('bn-home').classList.toggle('active', tab==='home');
+  document.getElementById('bn-fav').classList.toggle('active', tab==='fav');
+  const btnCustom = document.getElementById('bn-custom');
+  if(btnCustom) btnCustom.classList.toggle('active', tab==='custom');
+
+  const allScreens = ['home-screen','loading-screen','cards-screen',
+    'finish-screen','srs-screen','favourites-screen','custom-screen'];
+
+  if(tab === 'home'){
+    showScreenHome();
+  } else if(tab === 'custom'){
+    allScreens.forEach(id => document.getElementById(id).style.display='none');
+    document.getElementById('custom-screen').style.display='block';
+    const nav = document.getElementById('bottom-nav');
+    if(nav) nav.style.display='flex';
+    if(!cwWords.length) cwWords = [{de:'',ru:''},{de:'',ru:''},{de:'',ru:''}];
+    cwRender();
+  } else {
+    allScreens.forEach(id => document.getElementById(id).style.display='none');
+    document.getElementById('favourites-screen').style.display='block';
+    const nav = document.getElementById('bottom-nav');
+    if(nav) nav.style.display='flex';
+    buildFavouritesScreen();
+  }
+}
+function showScreenHome(){
+  ['loading-screen','cards-screen','finish-screen','srs-screen','favourites-screen']
+    .forEach(id => document.getElementById(id).style.display='none');
+  document.getElementById('home-screen').style.display='block';
+  const nav = document.getElementById('bottom-nav');
+  if(nav) nav.style.display='flex';
+}
+
+// ════════════════════════════════════════════
+//  LEVEL PROGRESS
+// ════════════════════════════════════════════
+function buildLevelProgress(){
+  if(!currentProfile) return;
+  const lvl = activeLevel;
+  const topics = TOPICS[lvl] || [];
+  let totalWords = 0, knownTotal = 0;
+  topics.forEach(t => {
+    const prog = getTopicProgress(t.id, t.words);
+    totalWords += prog.total;
+    knownTotal += prog.known;
+  });
+  const pct = totalWords > 0 ? Math.round(100 * knownTotal / totalWords) : 0;
+  let row = document.getElementById('level-progress-row');
+  if(!row){
+    row = document.createElement('div');
+    row.id = 'level-progress-row';
+    row.className = 'level-progress-row';
+    const tabs = document.getElementById('level-tabs');
+    if(tabs && tabs.parentNode) tabs.parentNode.insertBefore(row, tabs.nextSibling);
+  }
+  row.innerHTML = `
+    <span class="level-progress-label">Прогресс ${lvl}:</span>
+    <div class="level-progress-bar"><div class="level-progress-fill" style="width:${pct}%"></div></div>
+    <span class="level-progress-pct">${pct}%</span>
+    <span class="level-progress-label">(${knownTotal}/${totalWords})</span>
+  `;
+}
+
+
+// ════════════════════════════════════════════
+//  CUSTOM DECK SCREEN
+// ════════════════════════════════════════════
+let cwWords = []; // [{de:'', ru:''}]
+
+function openCustomScreen(){
+  switchTab('custom');
+}
+function closeCustomScreen(){
+  switchTab('home');
+}
+
+function cwRender(){
+  const container = document.getElementById('cw-rows');
+  if(!cwWords.length){
+    cwWords = [{de:'',ru:''},{de:'',ru:''},{de:'',ru:''}];
+  }
+  container.innerHTML = cwWords.map((w,i) => `
+    <div class="cw-row" id="cw-row-${i}">
+      <div class="cw-row-fields">
+        <input class="cw-input cw-input-de"
+          placeholder="Немецкое слово"
+          value="${escHtml(w.de)}"
+          oninput="cwUpdate(${i},'de',this.value)"
+          onkeydown="cwKeyDown(event,${i},'de')"
+        />
+        <div class="cw-divider"></div>
+        <input class="cw-input cw-input-ru"
+          placeholder="Перевод (необязательно)"
+          value="${escHtml(w.ru)}"
+          oninput="cwUpdate(${i},'ru',this.value)"
+          onkeydown="cwKeyDown(event,${i},'ru')"
+        />
+      </div>
+      <button class="cw-remove-btn" onclick="cwRemove(${i})" title="Удалить">✕</button>
+    </div>
+  `).join('');
+  cwUpdateStartBtn();
+}
+
+function escHtml(s){
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+}
+
+function cwUpdate(i, field, val){
+  cwWords[i][field] = val;
+  cwUpdateStartBtn();
+}
+
+function cwKeyDown(e, i, field){
+  // Enter на поле перевода → добавить строку
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    if(field === 'ru'){
+      cwWords.push({de:'',ru:''});
+      cwRender();
+      setTimeout(() => {
+        const rows = document.querySelectorAll('.cw-input-de');
+        if(rows[i+1]) rows[i+1].focus();
+      }, 30);
+    } else {
+      // Enter на поле немецкого → перейти в перевод
+      const ruInputs = document.querySelectorAll('.cw-input-ru');
+      if(ruInputs[i]) ruInputs[i].focus();
+    }
+  }
+}
+
+function cwAddRow(){
+  cwWords.push({de:'',ru:''});
+  cwRender();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('.cw-input-de');
+    if(inputs.length) inputs[inputs.length-1].focus();
+  }, 30);
+}
+
+function cwRemove(i){
+  cwWords.splice(i,1);
+  if(!cwWords.length) cwWords.push({de:'',ru:''});
+  cwRender();
+}
+
+function cwUpdateStartBtn(){
+  const btn = document.getElementById('cw-start-btn');
+  if(!btn) return;
+  const filled = cwWords.filter(w => w.de.trim()).length;
+  btn.disabled = filled === 0;
+  btn.textContent = filled > 0 ? `▶ Учить (${filled} слов)` : '▶ Учить';
+}
+
+async function cwStartDeck(){
+  const validWords = cwWords.filter(w => w.de.trim());
+  if(!validWords.length) return;
+
+  // Сохраняем кастомные переводы во временный объект
+  const customTranslations = {};
+  validWords.forEach(w => {
+    if(w.ru.trim()) customTranslations[w.de.trim()] = w.ru.trim();
+  });
+
+  const wordList = validWords.map(w => w.de.trim());
+
+  // Переключаемся на главный таб и запускаем колоду
+  switchTab('home');
+
+  // Генерируем карточки с учётом пользовательских переводов
+  await generateCardsWithCustom(wordList, customTranslations, '✏️ Свои карточки');
+}
+
+async function generateCardsWithCustom(wordList, customTranslations, deckName){
+  document.getElementById('gen-btn').disabled = true;
+  showScreen('loading-screen');
+  document.getElementById('loading-title').textContent = `Загружаем ${wordList.length} карточек...`;
+  await new Promise(r => setTimeout(r, 50));
+
+  cards = wordList.map(w => {
+    // Приоритет: 1) пользовательский перевод, 2) словарь
+    const customRu = customTranslations[w] || '';
+    const d = WORD_DICT[w] || ['—','','📖',`**${w}**`,''];
+    const art = d[1] || '';
+    return {
+      word: w,
+      translation: customRu || d[0] || '—',
+      article: art,
+      plural: false,
+      emoji: d[2] || '📖',
+      example_de: d[3] || `**${w}**`,
+      example_ru: customRu ? '' : (d[4] || ''),
+    };
+  });
+
+  knownWords = new Set();
+  repeatWords = new Set();
+  currentIndex = 0;
+  isFlipped = false;
+  currentTopicId = null;
+  srsMode = false;
+  document.getElementById('deck-title').textContent = deckName;
+  renderDots();
+  updateStats();
+  loadCard(0);
+  showScreen('cards-screen');
+  document.getElementById('gen-btn').disabled = false;
+}
+
 </script>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav" id="bottom-nav">
+  <button class="bn-btn active" id="bn-home" onclick="switchTab('home')">
+    <span class="bn-icon">🏠</span>Учёба
+  </button>
+  <button class="bn-btn" id="bn-custom" onclick="switchTab('custom')">
+    <span class="bn-icon">✏️</span>Свои
+  </button>
+  <button class="bn-btn" id="bn-fav" onclick="switchTab('fav')">
+    <span class="bn-icon">⭐</span>Избранные
+  </button>
+</div>
+
 </body>
 </html>
